@@ -1,0 +1,15 @@
+node_modules
+dist
+.git
+.gitignore
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+npm-debug.log*
+.DS_Store
+README.md
+chrome
+server/node_modules
+server/dist
+server/.data
+.data
