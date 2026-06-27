@@ -1,19 +1,15 @@
 /**
- * Central business contact data. These are placeholders until the real
- * briefing is provided; update here (single source of truth) before launch.
+ * Central business contact data — single source of truth.
  */
 export const CONTACT = {
   brand: 'Ana Beatriz',
   legalName: 'Ana Beatriz Nail Artistry',
-  whatsappNumber: '5500000000000', // DDI 55 + DDD + número, só dígitos
+  whatsappNumber: '5561994303143', // DDI 55 + DDD 61 + número, só dígitos
   whatsappMessage: 'Olá, Ana Beatriz! Gostaria de reservar um momento e solicitar um horário.',
   email: 'contato@anabeatriznail.com.br',
-  cnpj: '00.000.000/0001-00',
-  address: 'A definir',
   hours: 'Ter a Sáb, 9h às 19h (com hora marcada)',
   social: {
-    instagram: 'https://instagram.com/',
-    pinterest: 'https://br.pinterest.com/',
+    instagram: 'https://instagram.com/_anabeatriz.nail',
   },
 } as const
 

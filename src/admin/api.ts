@@ -1,3 +1,5 @@
+import { compressImageToFile } from '../lib/image'
+
 export type UploadItem = { name: string; url: string; mtime: number }
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
@@ -41,15 +43,17 @@ export const adminApi = {
   deleteUpload: (name: string) =>
     request<{ ok: boolean }>(`/uploads/${encodeURIComponent(name)}`, { method: 'DELETE' }),
   upload: async (file: File): Promise<{ url: string; name: string }> => {
+    // Downscale/compress in the browser so large phone photos upload reliably.
+    const compressed = await compressImageToFile(file)
     const data = await new Promise<string>((resolve, reject) => {
       const reader = new FileReader()
       reader.onload = () => resolve((reader.result as string).split(',')[1] ?? '')
       reader.onerror = reject
-      reader.readAsDataURL(file)
+      reader.readAsDataURL(compressed)
     })
     return request<{ url: string; name: string }>('/uploads', {
       method: 'POST',
-      body: JSON.stringify({ filename: file.name, data }),
+      body: JSON.stringify({ filename: compressed.name, data }),
     })
   },
 

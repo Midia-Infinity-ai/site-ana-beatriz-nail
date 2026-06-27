@@ -60,7 +60,9 @@ export function AdminCovers() {
   const [uploads, setUploads] = useState<{ name: string; url: string }[]>([])
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [error, setError] = useState('')
   const [busy, setBusy] = useState<CoverKey | null>(null)
+  const coversRef = useRef<CoversConfig>(DEFAULT_COVERS)
   const fileRefs = useRef<Record<CoverKey, HTMLInputElement | null>>({
     hero: null,
     criadora: null,
@@ -73,19 +75,42 @@ export function AdminCovers() {
   useEffect(() => {
     Promise.all([
       adminApi.getSiteContent().then((data) => {
-        if (data.covers) setCovers({ ...DEFAULT_COVERS, ...(data.covers as Partial<CoversConfig>) })
+        if (data.covers) {
+          const merged = { ...DEFAULT_COVERS, ...(data.covers as Partial<CoversConfig>) }
+          setCovers(merged)
+          coversRef.current = merged
+        }
       }),
       adminApi.listUploads().then(setUploads),
     ]).finally(() => setLoading(false))
   }, [])
 
+  // Update one cover AND persist immediately, so a change is never lost by
+  // forgetting to press "Salvar".
+  const applyCover = async (key: CoverKey, url: string) => {
+    const next = { ...coversRef.current, [key]: url }
+    coversRef.current = next
+    setCovers(next)
+    setError('')
+    try {
+      await adminApi.setSiteContent('covers', next)
+      setSaved(true)
+      window.setTimeout(() => setSaved(false), 2000)
+    } catch {
+      setError('Não foi possível salvar a capa. Verifique a conexão e tente novamente.')
+    }
+  }
+
   const save = async () => {
     setSaving(true)
     setSaved(false)
+    setError('')
     try {
-      await adminApi.setSiteContent('covers', covers)
+      await adminApi.setSiteContent('covers', coversRef.current)
       setSaved(true)
       window.setTimeout(() => setSaved(false), 2500)
+    } catch {
+      setError('Não foi possível salvar. Tente novamente.')
     } finally {
       setSaving(false)
     }
@@ -93,10 +118,13 @@ export function AdminCovers() {
 
   const uploadFile = async (key: CoverKey, file: File) => {
     setBusy(key)
+    setError('')
     try {
       const result = await adminApi.upload(file)
-      setCovers((prev) => ({ ...prev, [key]: result.url }))
       setUploads((prev) => [{ name: result.name, url: result.url }, ...prev])
+      await applyCover(key, result.url)
+    } catch {
+      setError('Falha no upload da imagem. Tente uma foto menor ou tente novamente.')
     } finally {
       setBusy(null)
     }
@@ -159,7 +187,7 @@ export function AdminCovers() {
               {covers[key] && (
                 <button
                   type="button"
-                  onClick={() => setCovers((prev) => ({ ...prev, [key]: '' }))}
+                  onClick={() => applyCover(key, '')}
                   className="text-silver-gray text-xs hover:text-error transition-colors font-label-sm uppercase mb-3 inline-flex items-center gap-1"
                 >
                   <Icon name="close" className="text-sm" /> Remover imagem
@@ -176,7 +204,7 @@ export function AdminCovers() {
                       <button
                         key={u.url}
                         type="button"
-                        onClick={() => setCovers((prev) => ({ ...prev, [key]: u.url }))}
+                        onClick={() => applyCover(key, u.url)}
                         className={`aspect-video overflow-hidden border-2 transition-colors ${
                           covers[key] === u.url
                             ? 'border-status-gold'
@@ -195,7 +223,7 @@ export function AdminCovers() {
         ))}
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 flex-wrap">
         <button
           onClick={save}
           disabled={saving}
@@ -208,6 +236,20 @@ export function AdminCovers() {
             <Icon name="check_circle" className="text-base" /> Salvo
           </span>
         )}
+        {error && (
+          <span className="text-error font-body-md flex items-center gap-2">
+            <Icon name="error" className="text-base" /> {error}
+          </span>
+        )}
+      </div>
+
+      <div className="mt-6 p-4 bg-surface-container-low border border-outline-variant/20">
+        <p className="text-silver-gray/60 text-xs flex gap-2">
+          <Icon name="info" className="text-xs shrink-0" />
+          Cada imagem é salva automaticamente ao enviar ou selecionar; o botão "Salvar Capas"
+          apenas reforça. As mudanças aparecem ao vivo no site (pode levar alguns minutos pelo
+          cache do navegador).
+        </p>
       </div>
     </div>
   )

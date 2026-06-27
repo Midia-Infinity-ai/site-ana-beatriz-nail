@@ -8,6 +8,7 @@ export function Criadora() {
   return (
     <section
       id="sobre"
+      data-nav-theme="light"
       className="py-section-gap px-safe-margin-mobile md:px-safe-margin bg-pearl-white relative scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">

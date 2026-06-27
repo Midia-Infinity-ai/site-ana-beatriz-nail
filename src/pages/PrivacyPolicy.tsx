@@ -9,7 +9,7 @@ export function PrivacyPolicy() {
       title: '1. Quem é a controladora dos seus dados',
       body: (
         <>
-          {CONTACT.legalName} (CNPJ {CONTACT.cnpj}) é a responsável pelo tratamento dos dados
+          {CONTACT.legalName} é a responsável pelo tratamento dos dados
           pessoais coletados neste site, em conformidade com a Lei Geral de Proteção de Dados
           (Lei nº 13.709/2018 — LGPD). Para qualquer questão relativa à privacidade, fale com
           a gente pelo e-mail{' '}
@@ -24,8 +24,9 @@ export function PrivacyPolicy() {
       title: '2. Quais dados coletamos',
       body: (
         <>
-          <strong>Dados de contato:</strong> nome e telefone/WhatsApp que você informa no
-          formulário de reserva, além de eventuais mensagens enviadas.
+          <strong>Dados de agendamento:</strong> nome, contato e demais informações que você
+          informa ao reservar um horário pelo nosso sistema de agendamento (Cal.com), exibido
+          na seção final do site.
           <br />
           <strong>Foto do provador virtual:</strong> a imagem que você envia na ferramenta
           "Espelho do Futuro" para gerar a prévia das suas unhas.
@@ -64,10 +65,12 @@ export function PrivacyPolicy() {
       title: '5. Compartilhamento com terceiros',
       body: (
         <>
-          A geração de imagem por IA é processada por provedores de tecnologia (OpenRouter e
-          modelos Google Gemini), estritamente para produzir a sua prévia. Ferramentas de
-          medição (como Meta e Google), quando ativadas, só são carregadas após o seu
-          consentimento no banner de cookies. Não vendemos os seus dados pessoais.
+          O agendamento de horários é operado pela plataforma Cal.com, que coleta e processa os
+          dados que você informa ao reservar. A geração de imagem por IA é processada por
+          provedores de tecnologia (OpenRouter e modelos Google Gemini), estritamente para
+          produzir a sua prévia. Ferramentas de medição (como Meta e Google), quando ativadas,
+          só são carregadas após o seu consentimento no banner de cookies. Não vendemos os seus
+          dados pessoais.
         </>
       ),
     },

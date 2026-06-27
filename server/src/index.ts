@@ -3,7 +3,7 @@ import cookie from '@fastify/cookie'
 import fastifyStatic from '@fastify/static'
 import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { UPLOADS_DIR } from './db.js'
+import { DATA_DIR, UPLOADS_DIR } from './db.js'
 import { seedDatabase } from './seed.js'
 import { authRoutes } from './routes/auth.js'
 import { siteContentRoutes } from './routes/siteContent.js'
@@ -77,7 +77,11 @@ async function main() {
   }
 
   await app.listen({ port: PORT, host: HOST })
-  app.log.info(`Ana Beatriz server on :${PORT} (public dir: ${existsSync(PUBLIC_DIR) ? PUBLIC_DIR : 'none/dev'})`)
+  app.log.info(
+    `Ana Beatriz server on :${PORT} (public: ${existsSync(PUBLIC_DIR) ? PUBLIC_DIR : 'none/dev'}, ` +
+      `data: ${DATA_DIR}, uploads: ${UPLOADS_DIR}). ` +
+      `Mount a persistent volume at the data dir so uploads/DB survive restarts.`,
+  )
 }
 
 main().catch((err) => {

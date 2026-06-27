@@ -8,6 +8,7 @@ export function Sensorial() {
   return (
     <section
       id="experiencia"
+      data-nav-theme="dark"
       className="py-section-gap px-safe-margin-mobile md:px-safe-margin bg-onyx-black text-pearl-white relative overflow-hidden scroll-mt-24"
     >
       {/* Decorative oversized background word */}

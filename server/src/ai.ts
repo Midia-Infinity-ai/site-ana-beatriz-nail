@@ -18,18 +18,14 @@ export const aiEnabled = (): boolean => API_KEY.length > 0
 
 /** Style id -> art-direction brief (kept server-side so it cannot be tampered). */
 const STYLE_PROMPTS: Record<string, string> = {
-  'classico-real':
-    'a clean, glossy "clean girl" manicure in a natural rosy-nude tone, subtle shine, impeccably shaped',
-  'ouro-majestoso':
-    'a couture design with antique-gold foil accents over a deep burgundy base, ornamental and luxurious',
-  minimalismo:
-    'a modern minimalist look: soft neutral base with one delicate fine-line detail, understated and elegant',
-  'nail-art':
-    'intricate hand-painted artistic nail art, unique and editorial, refined brushwork',
+  'molde-f1':
+    'long, elegant gel extensions built on an "F1" mold: an elongated almond/stiletto silhouette with ' +
+    'a slim, slightly curved tip, structured and resistant, with a flawless glossy natural finish',
+  'cutilagem-russa':
+    'a clean Russian manicure: an impeccably clean cuticle area with healthy, well-shaped natural nails ' +
+    'and a long-lasting, natural-looking glossy polish',
   francesinha:
-    'a modern french manicure with crisp, precise tips and a refined natural base',
-  'vermelho-couture':
-    'deep crimson-red high-gloss nails, timeless couture, rich and glossy',
+    'a modern french manicure (francesinha): crisp, precise white tips over a refined, natural sheer base',
 }
 
 export const STYLE_IDS = Object.keys(STYLE_PROMPTS)
@@ -64,21 +60,25 @@ async function call(body: Record<string, unknown>, timeoutMs: number): Promise<a
   }
 }
 
+type ContentPart =
+  | { type: 'text'; text: string }
+  | { type: 'image_url'; image_url: { url: string } }
+
 /**
- * Generate a try-on preview. `imageDataUrl` is the visitor's photo as a data
- * URL; `style` is one of STYLE_IDS. Returns base64 PNG data (no data-URL prefix).
+ * Generate a try-on preview. `imageDataUrl` is the visitor's hand photo (data
+ * URL); `style` is one of STYLE_IDS; `referenceDataUrl` is an optional photo of
+ * a desired nail design to replicate. Returns base64 PNG (no data-URL prefix).
  */
 export async function generateNailTryOn(
   imageDataUrl: string,
   style: string,
+  referenceDataUrl?: string,
 ): Promise<string> {
   const styleBrief = STYLE_PROMPTS[style]
   if (!styleBrief) throw new Error('invalid_style')
 
-  const instruction =
-    `Edit the provided photograph of a person's hand. Repaint ONLY the fingernails with ` +
-    `${styleBrief}. ` +
-    `Keep EVERYTHING else exactly as in the original photo: the same hand, the same skin tone ` +
+  const baseRules =
+    `Keep EVERYTHING else exactly as in the FIRST photo: the same hand, the same skin tone ` +
     `and texture, the same finger pose and proportions, the same background, the same lighting ` +
     `and shadows. Do not change the number of fingers or the hand shape. ` +
     `The result must look like a 100% real photograph of THIS hand with a fresh manicure, ` +
@@ -86,18 +86,28 @@ export async function generateNailTryOn(
     `physically correct reflections and shadows. No text, no watermark, no logo. ` +
     `Return a single edited image preserving the original framing and aspect ratio.`
 
+  const instruction = referenceDataUrl
+    ? `You are given TWO images. The FIRST image is a photograph of a person's hand. ` +
+      `The SECOND image is a reference showing a desired nail design. ` +
+      `Edit the FIRST image: repaint ONLY the fingernails so they faithfully reproduce the ` +
+      `colors, pattern, art and finish of the nail design shown in the SECOND (reference) image, ` +
+      `adapting it naturally to the shape and size of this person's nails. As a secondary hint, ` +
+      `the overall vibe is ${styleBrief}. ${baseRules}`
+    : `Edit the provided photograph of a person's hand. Repaint ONLY the fingernails with ` +
+      `${styleBrief}. ${baseRules}`
+
+  const parts: ContentPart[] = [
+    { type: 'text', text: instruction },
+    { type: 'image_url', image_url: { url: imageDataUrl } },
+  ]
+  if (referenceDataUrl) {
+    parts.push({ type: 'image_url', image_url: { url: referenceDataUrl } })
+  }
+
   const data = await call(
     {
       model: IMAGE_MODEL,
-      messages: [
-        {
-          role: 'user',
-          content: [
-            { type: 'text', text: instruction },
-            { type: 'image_url', image_url: { url: imageDataUrl } },
-          ],
-        },
-      ],
+      messages: [{ role: 'user', content: parts }],
       modalities: ['image', 'text'],
     },
     IMAGE_TIMEOUT_MS,

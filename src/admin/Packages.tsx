@@ -18,8 +18,14 @@ export function AdminPackages() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [error, setError] = useState('')
   const [uploadingId, setUploadingId] = useState<string | null>(null)
   const fileInputs = useRef<Record<string, HTMLInputElement | null>>({})
+  const packagesRef = useRef<ServicePackage[]>([])
+
+  useEffect(() => {
+    packagesRef.current = packages
+  }, [packages])
 
   useEffect(() => {
     Promise.all([
@@ -50,12 +56,31 @@ export function AdminPackages() {
       return next
     })
 
+  // Apply an image to a service AND persist the whole list, so the change is
+  // never lost by forgetting to press "Salvar".
+  const applyImage = async (id: string, url: string) => {
+    const next = packagesRef.current.map((p) => (p.id === id ? { ...p, image: url } : p))
+    packagesRef.current = next
+    setPackages(next)
+    setError('')
+    try {
+      await adminApi.setSiteContent('packages', next)
+      setSaved(true)
+      window.setTimeout(() => setSaved(false), 2000)
+    } catch {
+      setError('Não foi possível salvar. Tente novamente.')
+    }
+  }
+
   const uploadFile = async (id: string, file: File) => {
     setUploadingId(id)
+    setError('')
     try {
       const result = await adminApi.upload(file)
-      update(id, { image: result.url })
       setUploads((prev) => [{ name: result.name, url: result.url }, ...prev])
+      await applyImage(id, result.url)
+    } catch {
+      setError('Falha ao enviar a imagem. Tente uma foto menor ou tente novamente.')
     } finally {
       setUploadingId(null)
     }
@@ -160,7 +185,7 @@ export function AdminPackages() {
                         <button
                           key={u.url}
                           type="button"
-                          onClick={() => update(pkg.id, { image: u.url })}
+                          onClick={() => applyImage(pkg.id, u.url)}
                           className={`aspect-square overflow-hidden border-2 ${
                             pkg.image === u.url ? 'border-status-gold' : 'border-transparent hover:border-outline-variant'
                           }`}
@@ -252,6 +277,11 @@ export function AdminPackages() {
         {saved && (
           <span className="text-status-gold font-body-md flex items-center gap-2">
             <Icon name="check_circle" className="text-base" /> Salvo
+          </span>
+        )}
+        {error && (
+          <span className="text-error font-body-md flex items-center gap-2">
+            <Icon name="error" className="text-base" /> {error}
           </span>
         )}
       </div>

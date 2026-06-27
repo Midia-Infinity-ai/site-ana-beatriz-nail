@@ -23,6 +23,12 @@ db.exec(`
     count INTEGER NOT NULL DEFAULT 0
   );
 
+  CREATE TABLE IF NOT EXISTS nail_usage (
+    visitor TEXT PRIMARY KEY,
+    count INTEGER NOT NULL DEFAULT 0,
+    updated_at TEXT NOT NULL
+  );
+
   CREATE TABLE IF NOT EXISTS leads (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL DEFAULT '',
@@ -62,4 +68,20 @@ export function incrementAiUsage(month: string): number {
      ON CONFLICT(month) DO UPDATE SET count = count + 1`,
   ).run(month)
   return getAiUsage(month)
+}
+
+/** Per-visitor try-on counter (keeps a single person from draining credits). */
+export function getNailUsage(visitor: string): number {
+  const row = db.prepare('SELECT count FROM nail_usage WHERE visitor = ?').get(visitor) as
+    | { count: number }
+    | undefined
+  return row?.count ?? 0
+}
+
+export function incrementNailUsage(visitor: string): number {
+  db.prepare(
+    `INSERT INTO nail_usage (visitor, count, updated_at) VALUES (?, 1, ?)
+     ON CONFLICT(visitor) DO UPDATE SET count = count + 1, updated_at = excluded.updated_at`,
+  ).run(visitor, new Date().toISOString())
+  return getNailUsage(visitor)
 }

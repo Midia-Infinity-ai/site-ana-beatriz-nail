@@ -12,9 +12,6 @@ export function Footer() {
         <p className="font-body-md text-body-md text-ink-soft max-w-xs">
           © {year} {CONTACT.legalName}. Todos os direitos reservados.
         </p>
-        <p className="font-label-caps text-[10px] uppercase tracking-[0.2em] text-ink-soft/70">
-          CNPJ {CONTACT.cnpj}
-        </p>
       </div>
 
       <nav className="flex flex-wrap items-center gap-x-8 gap-y-4">
@@ -25,14 +22,6 @@ export function Footer() {
           className="font-body-md text-body-md text-ink-soft hover:text-onyx-black transition-colors inline-flex items-center gap-2"
         >
           <SocialIcon name="instagram" className="w-4 h-4" /> Instagram
-        </a>
-        <a
-          href={CONTACT.social.pinterest}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-body-md text-body-md text-ink-soft hover:text-onyx-black transition-colors inline-flex items-center gap-2"
-        >
-          <SocialIcon name="pinterest" className="w-4 h-4" /> Pinterest
         </a>
         <a
           href={whatsappHref()}

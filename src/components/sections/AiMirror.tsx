@@ -2,54 +2,73 @@ import { useRef, useState } from 'react'
 import { Reveal } from '../Reveal'
 import { Icon } from '../Icon'
 import { whatsappHref } from '../../lib/contact'
+import { compressImageToDataUrl } from '../../lib/image'
 
 /** Style options (ids are mapped to art-direction prompts on the server). */
 const STYLES = [
-  { id: 'classico-real', label: 'Clássico Real' },
-  { id: 'ouro-majestoso', label: 'Ouro Majestoso' },
-  { id: 'minimalismo', label: 'Minimalismo Moderno' },
-  { id: 'nail-art', label: 'Nail Art Autoral' },
-  { id: 'francesinha', label: 'Francesinha Moderna' },
-  { id: 'vermelho-couture', label: 'Vermelho Couture' },
+  { id: 'molde-f1', label: 'Molde F1' },
+  { id: 'cutilagem-russa', label: 'Cutilagem Russa' },
+  { id: 'francesinha', label: 'Francesinha' },
 ] as const
 
-const MAX_BYTES = 8 * 1024 * 1024
+const MAX_BYTES = 12 * 1024 * 1024
+const VISITOR_KEY = 'aba_visitor'
 
 type Status = 'idle' | 'generating' | 'done' | 'error'
 
-function readAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(reader.result as string)
-    reader.onerror = reject
-    reader.readAsDataURL(file)
-  })
+/** Stable anonymous id (shared with the visit tracker) for the per-person cap. */
+function getVisitorId(): string {
+  try {
+    let v = localStorage.getItem(VISITOR_KEY) ?? ''
+    if (!v) {
+      v = crypto.randomUUID?.() ?? `v-${Date.now()}-${Math.random().toString(36).slice(2)}`
+      localStorage.setItem(VISITOR_KEY, v)
+    }
+    return v
+  } catch {
+    return ''
+  }
 }
 
 export function AiMirror() {
   const [photo, setPhoto] = useState<string>('')
+  const [reference, setReference] = useState<string>('')
   const [style, setStyle] = useState<string>(STYLES[0].id)
   const [status, setStatus] = useState<Status>('idle')
   const [result, setResult] = useState<string>('')
   const [error, setError] = useState<string>('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const refInputRef = useRef<HTMLInputElement>(null)
+
+  const validate = (file: File): string => {
+    if (!file.type.startsWith('image/')) return 'Selecione uma imagem (JPG ou PNG).'
+    if (file.size > MAX_BYTES) return 'A imagem é muito grande. Use uma foto de até 8 MB.'
+    return ''
+  }
 
   const onPick = async (file?: File) => {
     if (!file) return
-    if (!file.type.startsWith('image/')) {
-      setError('Selecione uma imagem (JPG ou PNG).')
+    const msg = validate(file)
+    if (msg) {
+      setError(msg)
       setStatus('error')
       return
     }
-    if (file.size > MAX_BYTES) {
-      setError('A imagem é muito grande. Use uma foto de até 8 MB.')
-      setStatus('error')
-      return
-    }
-    const dataUrl = await readAsDataUrl(file)
-    setPhoto(dataUrl)
+    setPhoto(await compressImageToDataUrl(file))
     setResult('')
     setStatus('idle')
+    setError('')
+  }
+
+  const onPickReference = async (file?: File) => {
+    if (!file) return
+    const msg = validate(file)
+    if (msg) {
+      setError(msg)
+      setStatus('error')
+      return
+    }
+    setReference(await compressImageToDataUrl(file))
     setError('')
   }
 
@@ -61,7 +80,12 @@ export function AiMirror() {
       const res = await fetch('/api/nail/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: photo, style }),
+        body: JSON.stringify({
+          image: photo,
+          style,
+          reference: reference || undefined,
+          visitor: getVisitorId(),
+        }),
       })
       if (!res.ok) {
         const detail = (await res.json().catch(() => ({}))) as { error?: string }
@@ -76,9 +100,11 @@ export function AiMirror() {
       setError(
         code === 'ai_disabled'
           ? 'O provador virtual está sendo configurado. Tente novamente em breve.'
-          : code === 'ai_limit_reached'
-            ? 'Atingimos o limite de provas deste mês. Fale comigo no WhatsApp que eu te mostro pessoalmente!'
-            : 'Não consegui gerar agora. Tente outra foto ou tente novamente em instantes.',
+          : code === 'personal_limit'
+            ? 'Você já experimentou alguns estilos por aqui. Para explorar mais possibilidades, me chame no WhatsApp!'
+            : code === 'ai_limit_reached'
+              ? 'Atingimos o limite de provas deste mês. Me chame no WhatsApp que eu te mostro pessoalmente!'
+              : 'Não consegui gerar agora. Tente outra foto ou tente novamente em instantes.',
       )
       setStatus('error')
     }
@@ -86,10 +112,12 @@ export function AiMirror() {
 
   const reset = () => {
     setPhoto('')
+    setReference('')
     setResult('')
     setStatus('idle')
     setError('')
     if (inputRef.current) inputRef.current.value = ''
+    if (refInputRef.current) refInputRef.current.value = ''
   }
 
   const styleLabel = STYLES.find((s) => s.id === style)?.label ?? ''
@@ -97,6 +125,7 @@ export function AiMirror() {
   return (
     <section
       id="espelho"
+      data-nav-theme="light"
       className="py-section-gap px-safe-margin-mobile md:px-safe-margin bg-pearl-white relative scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
@@ -189,37 +218,85 @@ export function AiMirror() {
               </div>
             )}
 
-            {/* Style chooser */}
-            <div className="flex flex-col gap-4">
-              <span className="font-label-caps text-[10px] text-antique-gold uppercase tracking-[0.2em]">
-                Escolha seu Estilo
-              </span>
-              <div className="flex flex-wrap gap-3">
-                {STYLES.map((s) => (
-                  <button
-                    key={s.id}
-                    onClick={() => setStyle(s.id)}
-                    className={`px-4 py-2 border font-label-caps text-[10px] uppercase tracking-[0.2em] transition-all ${
-                      style === s.id
-                        ? 'bg-antique-gold text-onyx-black border-antique-gold'
-                        : 'border-antique-gold/30 text-onyx-black hover:bg-antique-gold hover:text-onyx-black'
-                    }`}
-                  >
-                    {s.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+            {status !== 'done' && (
+              <>
+                {/* Style chooser */}
+                <div className="flex flex-col gap-4">
+                  <span className="font-label-caps text-[10px] text-antique-gold uppercase tracking-[0.2em]">
+                    Escolha seu Estilo
+                  </span>
+                  <div className="flex flex-wrap gap-3">
+                    {STYLES.map((s) => (
+                      <button
+                        key={s.id}
+                        onClick={() => setStyle(s.id)}
+                        className={`px-4 py-2 border font-label-caps text-[10px] uppercase tracking-[0.2em] transition-all ${
+                          style === s.id
+                            ? 'bg-antique-gold text-onyx-black border-antique-gold'
+                            : 'border-antique-gold/30 text-onyx-black hover:bg-antique-gold hover:text-onyx-black'
+                        }`}
+                      >
+                        {s.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-            {/* Action */}
-            <button
-              onClick={generate}
-              disabled={!photo || status === 'generating'}
-              className="inline-flex items-center justify-center gap-3 bg-onyx-black text-pearl-white px-8 py-4 font-label-caps text-[11px] uppercase tracking-[0.2em] hover:bg-deep-burgundy transition-colors disabled:opacity-40 disabled:cursor-not-allowed w-fit"
-            >
-              <Icon name="auto_awesome" className="text-base" />
-              {status === 'generating' ? 'Gerando...' : 'Gerar minha prévia'}
-            </button>
+                {/* Optional reference image */}
+                <div className="flex flex-col gap-3">
+                  <span className="font-label-caps text-[10px] text-antique-gold uppercase tracking-[0.2em]">
+                    Imagem de referência (opcional)
+                  </span>
+                  <div className="flex items-center gap-4">
+                    <button
+                      type="button"
+                      onClick={() => refInputRef.current?.click()}
+                      className="relative w-16 h-16 shrink-0 border border-antique-gold/40 bg-white/60 flex items-center justify-center hover:bg-white transition-colors overflow-hidden"
+                      aria-label="Adicionar imagem de referência"
+                    >
+                      {reference ? (
+                        <img src={reference} alt="Referência" className="w-full h-full object-cover" />
+                      ) : (
+                        <Icon name="add_photo_alternate" className="text-antique-gold text-2xl" />
+                      )}
+                    </button>
+                    <div className="text-xs text-ink-soft/70 leading-relaxed">
+                      {reference ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setReference('')
+                            if (refInputRef.current) refInputRef.current.value = ''
+                          }}
+                          className="text-deep-burgundy underline underline-offset-2 hover:opacity-70"
+                        >
+                          Remover referência
+                        </button>
+                      ) : (
+                        'Tem um modelo em mente? Envie uma foto e a IA replica esse desenho nas suas unhas.'
+                      )}
+                    </div>
+                    <input
+                      ref={refInputRef}
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => onPickReference(e.target.files?.[0])}
+                    />
+                  </div>
+                </div>
+
+                {/* Action */}
+                <button
+                  onClick={generate}
+                  disabled={!photo || status === 'generating'}
+                  className="inline-flex items-center justify-center gap-3 bg-onyx-black text-pearl-white px-8 py-4 font-label-caps text-[11px] uppercase tracking-[0.2em] hover:bg-deep-burgundy transition-colors disabled:opacity-40 disabled:cursor-not-allowed w-fit"
+                >
+                  <Icon name="auto_awesome" className="text-base" />
+                  {status === 'generating' ? 'Gerando...' : 'Gerar minha prévia'}
+                </button>
+              </>
+            )}
 
             {error && (
               <p className="flex items-center gap-2 text-sm text-deep-burgundy" role="alert">
@@ -244,9 +321,9 @@ export function AiMirror() {
           </Reveal>
           <Reveal delay={200}>
             <p className="font-body-lg text-body-lg text-ink-soft mb-4">
-              Envie uma foto das suas mãos, escolha um estilo e veja, em segundos, uma prévia
-              ultra-realista do resultado, fiel às suas unhas. Uma experiência sob medida,
-              antes mesmo de sair de casa.
+              Envie uma foto das suas mãos, escolha um estilo (ou anexe uma referência) e veja,
+              em segundos, uma prévia ultra-realista do resultado, fiel às suas unhas. Uma
+              experiência sob medida, antes mesmo de sair de casa.
             </p>
           </Reveal>
           <Reveal delay={300}>

@@ -7,6 +7,7 @@ export function Hero() {
   return (
     <section
       id="topo"
+      data-nav-theme="dark"
       className="relative min-h-screen flex items-center justify-center px-safe-margin-mobile md:px-safe-margin pt-32 pb-16 overflow-hidden"
     >
       <div className="absolute inset-0 z-0 bg-onyx-black">

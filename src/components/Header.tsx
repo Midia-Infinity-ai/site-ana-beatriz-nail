@@ -11,8 +11,13 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Sobre Mim', id: 'sobre' },
 ]
 
+// Vertical point (px from top) used to sample which section sits under the bar.
+const SAMPLE_Y = 44
+
 export function Header() {
   const [open, setOpen] = useState(false)
+  // Header text tone: 'light' = white text (over dark sections), 'dark' = black.
+  const [tone, setTone] = useState<'light' | 'dark'>('light')
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
@@ -23,6 +28,37 @@ export function Header() {
       document.body.style.overflow = ''
     }
   }, [open])
+
+  // Pick black/white based on the section currently under the header band.
+  useEffect(() => {
+    let frame = 0
+    const compute = () => {
+      frame = 0
+      const sections = Array.from(
+        document.querySelectorAll<HTMLElement>('[data-nav-theme]'),
+      )
+      let next: 'light' | 'dark' = 'dark' // default (light pages -> black text)
+      for (const el of sections) {
+        const rect = el.getBoundingClientRect()
+        if (rect.top <= SAMPLE_Y && rect.bottom > SAMPLE_Y) {
+          next = el.dataset.navTheme === 'dark' ? 'light' : 'dark'
+          break
+        }
+      }
+      setTone(next)
+    }
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(compute)
+    }
+    compute()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (frame) window.cancelAnimationFrame(frame)
+    }
+  }, [pathname])
 
   const goTo = (id: string) => {
     setOpen(false)
@@ -38,12 +74,13 @@ export function Header() {
     }
   }
 
+  // When the overlay is open the header sits over onyx -> always white.
+  const headerColor = open ? 'text-pearl-white' : tone === 'light' ? 'text-white' : 'text-onyx-black'
+
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-[60] flex justify-between items-center px-safe-margin-mobile md:px-safe-margin py-6 transition-all duration-300 ${
-          open ? 'text-pearl-white' : 'text-white mix-blend-difference'
-        }`}
+        className={`fixed top-0 left-0 w-full z-[60] flex justify-between items-center px-safe-margin-mobile md:px-safe-margin py-6 transition-colors duration-300 ${headerColor}`}
       >
         <button
           onClick={() => goTo('topo')}

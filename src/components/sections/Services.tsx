@@ -39,6 +39,7 @@ export function Services() {
   return (
     <section
       id="servicos"
+      data-nav-theme="light"
       className="py-section-gap px-safe-margin-mobile md:px-safe-margin bg-canvas relative scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto">

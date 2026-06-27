@@ -32,6 +32,7 @@ export function BeforeAfter() {
   return (
     <section
       id="portfolio"
+      data-nav-theme="light"
       className="py-section-gap px-safe-margin-mobile md:px-safe-margin bg-pearl-white relative scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto text-center mb-16">
