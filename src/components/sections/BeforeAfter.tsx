@@ -56,7 +56,7 @@ export function BeforeAfter() {
       <Reveal delay={100} className="max-w-5xl mx-auto">
         <div
           ref={ref}
-          className="aspect-video before-after-slider layer-depth-1 select-none"
+          className="aspect-[4/5] sm:aspect-video before-after-slider mask-soft ring-soft layer-depth-1 select-none"
           onMouseDown={(e) => onDown(e.clientX)}
           onMouseMove={(e) => onMove(e.clientX)}
           onMouseUp={stop}

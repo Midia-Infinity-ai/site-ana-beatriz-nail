@@ -80,7 +80,7 @@ export function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-[60] flex justify-between items-center px-safe-margin-mobile md:px-safe-margin py-6 transition-colors duration-300 ${headerColor}`}
+        className={`fixed top-0 left-0 w-full z-[60] flex justify-between items-center px-safe-margin-mobile md:px-safe-margin pt-[calc(env(safe-area-inset-top)+1.25rem)] pb-5 md:py-6 transition-colors duration-300 ${headerColor}`}
       >
         <button
           onClick={() => goTo('topo')}

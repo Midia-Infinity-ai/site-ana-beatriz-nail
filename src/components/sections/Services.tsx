@@ -58,22 +58,31 @@ export function Services() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-x-gutter gap-y-16">
           {list.map((svc, i) => (
-            <Reveal as="article" key={svc.id} delay={i * 100} className="group flex flex-col">
-              <div className="aspect-[4/5] relative overflow-hidden mb-6">
+            <Reveal
+              as="article"
+              key={svc.id}
+              delay={i * 100}
+              className="group flex flex-col mx-auto w-full max-w-sm md:max-w-none"
+            >
+              <div className="aspect-[4/5] relative overflow-hidden mask-arch ring-soft mb-6">
                 <SectionImage
                   src={svc.image}
                   alt={svc.title}
                   reveal={false}
-                  imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
+                  imgClassName="transition-transform duration-[1.1s] ease-out group-hover:scale-[1.05]"
                 />
                 {svc.badge ? (
-                  <span className="absolute top-4 left-4 bg-onyx-black/80 text-pearl-white font-label-caps text-[10px] uppercase tracking-[0.2em] px-3 py-1.5">
+                  <span className="absolute bottom-4 left-4 bg-onyx-black/80 text-pearl-white font-label-caps text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
                     {svc.badge}
                   </span>
                 ) : null}
               </div>
-              <h3 className="font-headline-md text-2xl text-onyx-black mb-3">{svc.title}</h3>
-              <p className="font-body-md text-body-md text-ink-soft leading-relaxed">{svc.text}</p>
+              <h3 className="font-headline-md text-2xl text-onyx-black mb-3 text-center md:text-left">
+                {svc.title}
+              </h3>
+              <p className="font-body-md text-body-md text-ink-soft leading-relaxed text-center md:text-left">
+                {svc.text}
+              </p>
             </Reveal>
           ))}
         </div>

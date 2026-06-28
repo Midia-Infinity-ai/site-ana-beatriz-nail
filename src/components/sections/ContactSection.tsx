@@ -22,7 +22,7 @@ export function ContactSection() {
         </div>
 
         {/* Cal.com inline scheduling */}
-        <div className="bg-pearl-white text-onyx-black p-3 md:p-5 layer-depth-1">
+        <div className="bg-pearl-white text-onyx-black p-2 sm:p-4 md:p-5 mask-soft layer-depth-1 w-full overflow-hidden">
           <CalEmbed />
         </div>
       </div>

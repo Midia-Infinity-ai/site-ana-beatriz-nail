@@ -128,37 +128,37 @@ export function AiMirror() {
       data-nav-theme="light"
       className="py-20 sm:py-28 md:py-section-gap px-safe-margin-mobile md:px-safe-margin bg-pearl-white relative scroll-mt-24"
     >
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
         {/* Interactive panel */}
         <div className="order-2 md:order-1 relative">
           <div className="flex flex-col gap-8">
             {/* Upload / preview / result */}
             {status === 'done' && result ? (
               <div className="relative">
-                <div className="aspect-square relative overflow-hidden layer-depth-1 bg-onyx-black">
+                <div className="aspect-square relative overflow-hidden mask-soft-lg ring-soft layer-depth-1 bg-onyx-black">
                   <img
                     src={result}
                     alt={`Prévia das suas unhas no estilo ${styleLabel}`}
                     className="w-full h-full object-cover"
                   />
-                  <span className="absolute top-4 left-4 bg-antique-gold text-onyx-black font-label-caps text-[10px] uppercase tracking-[0.2em] px-3 py-1.5">
+                  <span className="absolute top-4 left-4 bg-antique-gold text-onyx-black font-label-caps text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
                     {styleLabel}
                   </span>
                 </div>
-                <div className="flex flex-wrap gap-3 mt-5">
+                <div className="flex flex-col sm:flex-row gap-3 mt-5">
                   <a
                     href={whatsappHref(
                       `Olá, Ana Beatriz! Provei o estilo "${styleLabel}" no Espelho do Futuro e amei. Gostaria de agendar um horário.`,
                     )}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 bg-deep-burgundy text-pearl-white px-6 py-3 font-label-caps text-[11px] uppercase tracking-[0.2em] hover:bg-onyx-black transition-colors"
+                    className="inline-flex items-center justify-center gap-2 bg-deep-burgundy text-pearl-white px-6 py-4 sm:py-3 font-label-caps text-[11px] uppercase tracking-[0.2em] hover:bg-onyx-black transition-colors w-full sm:w-auto"
                   >
                     <Icon name="event_available" className="text-base" /> Agendar este modelo
                   </a>
                   <button
                     onClick={reset}
-                    className="inline-flex items-center gap-2 border border-onyx-black/30 text-onyx-black px-6 py-3 font-label-caps text-[11px] uppercase tracking-[0.2em] hover:border-onyx-black transition-colors"
+                    className="inline-flex items-center justify-center gap-2 border border-onyx-black/30 text-onyx-black px-6 py-4 sm:py-3 font-label-caps text-[11px] uppercase tracking-[0.2em] hover:border-onyx-black transition-colors w-full sm:w-auto"
                   >
                     <Icon name="restart_alt" className="text-base" /> Tentar outro
                   </button>
@@ -170,7 +170,7 @@ export function AiMirror() {
                 tabIndex={0}
                 onClick={() => inputRef.current?.click()}
                 onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && inputRef.current?.click()}
-                className="aspect-square relative overflow-hidden border-2 border-dashed border-antique-gold/40 bg-white/60 flex flex-col items-center justify-center text-center px-6 group cursor-pointer hover:bg-white transition-all duration-500 layer-depth-1"
+                className="aspect-square relative overflow-hidden mask-soft-lg border-2 border-dashed border-antique-gold/40 bg-white/60 flex flex-col items-center justify-center text-center px-6 group cursor-pointer hover:bg-white transition-all duration-500 layer-depth-1"
               >
                 {photo ? (
                   <>
@@ -230,7 +230,7 @@ export function AiMirror() {
                       <button
                         key={s.id}
                         onClick={() => setStyle(s.id)}
-                        className={`px-4 py-2 border font-label-caps text-[10px] uppercase tracking-[0.2em] transition-all ${
+                        className={`px-5 py-2.5 rounded-full border font-label-caps text-[10px] uppercase tracking-[0.2em] transition-all ${
                           style === s.id
                             ? 'bg-antique-gold text-onyx-black border-antique-gold'
                             : 'border-antique-gold/30 text-onyx-black hover:bg-antique-gold hover:text-onyx-black'
@@ -251,7 +251,7 @@ export function AiMirror() {
                     <button
                       type="button"
                       onClick={() => refInputRef.current?.click()}
-                      className="relative w-16 h-16 shrink-0 border border-antique-gold/40 bg-white/60 flex items-center justify-center hover:bg-white transition-colors overflow-hidden"
+                      className="relative w-16 h-16 shrink-0 rounded-2xl border border-antique-gold/40 bg-white/60 flex items-center justify-center hover:bg-white transition-colors overflow-hidden"
                       aria-label="Adicionar imagem de referência"
                     >
                       {reference ? (
@@ -290,7 +290,7 @@ export function AiMirror() {
                 <button
                   onClick={generate}
                   disabled={!photo || status === 'generating'}
-                  className="inline-flex items-center justify-center gap-3 bg-onyx-black text-pearl-white px-8 py-4 font-label-caps text-[11px] uppercase tracking-[0.2em] hover:bg-deep-burgundy transition-colors disabled:opacity-40 disabled:cursor-not-allowed w-fit"
+                  className="inline-flex items-center justify-center gap-3 bg-onyx-black text-pearl-white px-8 py-4 font-label-caps text-[11px] uppercase tracking-[0.2em] hover:bg-deep-burgundy transition-colors disabled:opacity-40 disabled:cursor-not-allowed w-full sm:w-fit rounded-full"
                 >
                   <Icon name="auto_awesome" className="text-base" />
                   {status === 'generating' ? 'Gerando...' : 'Gerar minha prévia'}

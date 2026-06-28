@@ -8,7 +8,7 @@ export function Hero() {
     <section
       id="topo"
       data-nav-theme="dark"
-      className="relative min-h-screen flex items-center justify-center px-safe-margin-mobile md:px-safe-margin pt-32 pb-16 overflow-hidden"
+      className="relative min-h-[100svh] flex items-center justify-center px-safe-margin-mobile md:px-safe-margin pt-28 pb-20 overflow-hidden"
     >
       <div className="absolute inset-0 z-0 bg-onyx-black">
         {covers.hero ? (
@@ -29,20 +29,20 @@ export function Hero() {
       </div>
 
       <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center text-center">
-        <span className="font-label-caps text-label-caps text-antique-gold tracking-[0.3em] uppercase mb-8 animate-rise">
+        <span className="font-label-caps text-[10px] sm:text-label-caps text-antique-gold tracking-[0.3em] uppercase mb-6 sm:mb-8 animate-rise">
           {hero.kicker}
         </span>
         <h1
-          className="font-display-xl text-[15vw] leading-[0.95] sm:text-[60px] sm:leading-[60px] md:text-display-xl text-pearl-white animate-rise"
+          className="font-display-xl text-[clamp(2.5rem,11vw,3.6rem)] leading-[1.04] sm:text-[60px] sm:leading-[60px] md:text-display-xl md:leading-[110px] text-pearl-white animate-rise"
           style={{ ['--rise-delay' as string]: '200ms' }}
         >
           {hero.title}
         </h1>
         <div
-          className="mt-16 flex flex-col items-center gap-4 animate-rise"
+          className="mt-12 sm:mt-16 flex flex-col items-center gap-4 animate-rise"
           style={{ ['--rise-delay' as string]: '400ms' }}
         >
-          <span className="w-px h-24 bg-pearl-white/50" />
+          <span className="w-px h-16 sm:h-24 bg-pearl-white/50" />
           <span className="font-label-caps text-[10px] uppercase tracking-[0.3em] text-pearl-white/50">
             Descubra
           </span>

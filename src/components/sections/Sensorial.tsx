@@ -16,8 +16,8 @@ export function Sensorial() {
         SENSORIAL
       </div>
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-gutter relative z-10">
-        <div className="md:col-span-4 flex flex-col justify-center mb-12 md:mb-0">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-gutter relative z-10">
+        <div className="md:col-span-4 flex flex-col justify-center mb-10 md:mb-0">
           <Reveal>
             <span className="font-label-caps text-label-caps text-antique-gold tracking-[0.2em] uppercase mb-6 block">
               O Momento de Cuidado
@@ -49,7 +49,7 @@ export function Sensorial() {
         </div>
 
         <div className="md:col-span-7 md:col-start-6 relative">
-          <div className="aspect-[4/5] md:aspect-[16/9] relative overflow-hidden">
+          <div className="aspect-[4/5] md:aspect-[16/9] relative overflow-hidden mask-soft-lg ring-soft">
             <SectionImage
               src={covers.sensorial}
               alt="Detalhe macro de um cuidado de luxo nas unhas"

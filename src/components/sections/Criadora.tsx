@@ -11,16 +11,20 @@ export function Criadora() {
       data-nav-theme="light"
       className="py-20 sm:py-28 md:py-section-gap px-safe-margin-mobile md:px-safe-margin bg-pearl-white relative scroll-mt-24"
     >
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
-        <div className="md:col-span-5 relative">
-          <div className="aspect-[3/4] relative overflow-hidden">
-            <SectionImage src={covers.criadora} alt="Retrato de Ana Beatriz em seu atelier" />
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-gutter items-center">
+        <div className="md:col-span-5 relative mx-auto w-full max-w-sm md:max-w-none">
+          <div className="aspect-[3/4] relative overflow-hidden mask-arch ring-soft">
+            <SectionImage
+              src={covers.criadora}
+              alt="Retrato de Ana Beatriz em seu atelier"
+              imgClassName="transition-transform duration-[1.4s] ease-out hover:scale-[1.05]"
+            />
           </div>
-          {/* Geometric ornament */}
-          <div className="absolute -bottom-8 -right-8 w-64 h-64 border border-antique-gold/30 z-[-1] hidden md:block" />
+          {/* Arched gold echo, offset for a delicate layered feel */}
+          <div className="absolute -bottom-5 -right-5 md:-bottom-8 md:-right-8 w-full h-full border border-antique-gold/30 mask-arch z-[-1]" />
         </div>
 
-        <div className="md:col-span-6 md:col-start-7 flex flex-col pt-12 md:pt-0">
+        <div className="md:col-span-6 md:col-start-7 flex flex-col md:pt-0">
           <Reveal>
             <span className="font-label-caps text-label-caps text-antique-gold tracking-[0.2em] uppercase mb-6 block">
               A Criadora

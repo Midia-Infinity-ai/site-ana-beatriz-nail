@@ -89,7 +89,7 @@ export default {
       fontSize: {
         'display-xl': ['120px', { lineHeight: '110px', letterSpacing: '-0.04em', fontWeight: '400' }],
         'headline-lg': ['64px', { lineHeight: '72px', letterSpacing: '-0.02em', fontWeight: '400' }],
-        'headline-lg-mobile': ['40px', { lineHeight: '48px', fontWeight: '400' }],
+        'headline-lg-mobile': ['34px', { lineHeight: '40px', fontWeight: '400' }],
         'headline-md': ['32px', { lineHeight: '40px', fontWeight: '400' }],
         'body-lg': ['18px', { lineHeight: '32px', letterSpacing: '0.01em', fontWeight: '300' }],
         'body-md': ['15px', { lineHeight: '26px', fontWeight: '400' }],
