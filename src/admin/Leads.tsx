@@ -50,7 +50,7 @@ export function AdminLeads() {
           <a
             href={adminApi.exportLeads()}
             download
-            className="btn-shine bg-primary text-pure-black px-5 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors inline-flex items-center gap-2"
+            className="btn-shine bg-primary text-on-primary px-5 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors inline-flex items-center gap-2"
           >
             <Icon name="download" className="text-lg" /> Exportar CSV
           </a>
@@ -70,7 +70,7 @@ export function AdminLeads() {
       ) : (
         <div className="border border-outline-variant/30 divide-y divide-outline-variant/20">
           {leads.map((lead) => (
-            <div key={lead.id} className="p-6 hover:bg-white/5 transition-colors">
+            <div key={lead.id} className="p-6 hover:bg-black/[0.03] transition-colors">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div>

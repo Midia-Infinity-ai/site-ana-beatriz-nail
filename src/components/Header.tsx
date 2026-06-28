@@ -84,7 +84,7 @@ export function Header() {
       >
         <button
           onClick={() => goTo('topo')}
-          className="font-headline-md text-headline-md tracking-tight"
+          className="font-headline-md text-2xl sm:text-headline-md tracking-tight"
           aria-label="Ana Beatriz, ir ao topo"
         >
           Ana Beatriz

@@ -33,7 +33,7 @@ export function BeforeAfter() {
     <section
       id="portfolio"
       data-nav-theme="light"
-      className="py-section-gap px-safe-margin-mobile md:px-safe-margin bg-pearl-white relative scroll-mt-24"
+      className="py-20 sm:py-28 md:py-section-gap px-safe-margin-mobile md:px-safe-margin bg-pearl-white relative scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto text-center mb-16">
         <Reveal>
@@ -69,7 +69,8 @@ export function BeforeAfter() {
           <SectionImage
             src={covers.beforeAfter}
             alt="Resultado: nail art autoral"
-            className="absolute inset-0 w-full h-full pointer-events-none"
+            reveal={false}
+            className="absolute inset-0 pointer-events-none"
             imgClassName="pointer-events-none"
           />
           {/* Before (clipped overlay) */}
@@ -80,7 +81,7 @@ export function BeforeAfter() {
             <SectionImage
               src={covers.beforeBefore}
               alt="Antes: elegância natural"
-              className="w-full h-full"
+              reveal={false}
             />
           </div>
           <div className="slider-handle" style={{ left: `${pos}%` }}>

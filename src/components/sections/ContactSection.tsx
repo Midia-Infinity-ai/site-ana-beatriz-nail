@@ -5,7 +5,7 @@ export function ContactSection() {
     <section
       id="agendar"
       data-nav-theme="dark"
-      className="py-section-gap px-safe-margin-mobile md:px-safe-margin bg-deep-burgundy text-pearl-white relative scroll-mt-24"
+      className="py-20 sm:py-28 md:py-section-gap px-safe-margin-mobile md:px-safe-margin bg-deep-burgundy text-pearl-white relative scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-gutter items-start">
         <div className="flex flex-col lg:sticky lg:top-32">

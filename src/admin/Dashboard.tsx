@@ -169,7 +169,7 @@ export function AdminDashboard() {
       <div className="flex flex-wrap gap-4">
         <Link
           to="/admin/site-content"
-          className="bg-status-gold text-pure-black px-6 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-primary transition-colors inline-flex items-center gap-2"
+          className="bg-primary text-on-primary px-6 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors inline-flex items-center gap-2"
         >
           <Icon name="tune" className="text-lg" /> Editar Conteúdo
         </Link>

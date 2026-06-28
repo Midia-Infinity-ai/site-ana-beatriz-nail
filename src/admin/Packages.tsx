@@ -40,7 +40,7 @@ export function AdminPackages() {
     setPackages((prev) => prev.map((p) => (p.id === id ? { ...p, ...patch } : p)))
 
   const remove = (id: string) => {
-    if (!window.confirm('Excluir este pacote?')) return
+    if (!window.confirm('Excluir este serviço?')) return
     setPackages((prev) => prev.filter((p) => p.id !== id))
   }
 
@@ -116,14 +116,13 @@ export function AdminPackages() {
           onClick={add}
           className="bg-surface-container border border-outline-variant/40 text-primary px-5 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:border-status-gold transition-colors inline-flex items-center gap-2 shrink-0"
         >
-          <Icon name="add" className="text-lg" /> Novo Pacote
+          <Icon name="add" className="text-lg" /> Novo Serviço
         </button>
       </div>
 
       <div className="bg-surface-container-low border border-outline-variant/20 p-4 mb-8 inline-flex items-center gap-2 text-sm text-silver-gray">
         <Icon name="info" className="text-status-gold text-base" />
-        {activeCount} pacote{activeCount !== 1 ? 's' : ''} ativo{activeCount !== 1 ? 's' : ''}
-        {activeCount > 3 && ' — carrossel ativado no site'}
+        {activeCount} serviço{activeCount !== 1 ? 's' : ''} ativo{activeCount !== 1 ? 's' : ''} no site
       </div>
 
       {packages.length === 0 ? (
@@ -270,7 +269,7 @@ export function AdminPackages() {
         <button
           onClick={save}
           disabled={saving}
-          className="btn-shine bg-primary text-pure-black px-8 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors disabled:opacity-50"
+          className="btn-shine bg-primary text-on-primary px-8 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors disabled:opacity-50"
         >
           {saving ? 'Salvando...' : 'Salvar Serviços'}
         </button>

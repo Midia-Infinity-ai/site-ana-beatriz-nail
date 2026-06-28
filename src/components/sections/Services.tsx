@@ -40,7 +40,7 @@ export function Services() {
     <section
       id="servicos"
       data-nav-theme="light"
-      className="py-section-gap px-safe-margin-mobile md:px-safe-margin bg-canvas relative scroll-mt-24"
+      className="py-20 sm:py-28 md:py-section-gap px-safe-margin-mobile md:px-safe-margin bg-canvas relative scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto">
         <div className="max-w-2xl mb-16">
@@ -63,7 +63,7 @@ export function Services() {
                 <SectionImage
                   src={svc.image}
                   alt={svc.title}
-                  className="w-full h-full transition-transform duration-700 group-hover:scale-[1.03]"
+                  reveal={false}
                   imgClassName="transition-transform duration-700 group-hover:scale-[1.03]"
                 />
                 {svc.badge ? (

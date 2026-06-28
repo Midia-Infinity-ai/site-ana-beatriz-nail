@@ -42,7 +42,7 @@ export function AiMirror() {
 
   const validate = (file: File): string => {
     if (!file.type.startsWith('image/')) return 'Selecione uma imagem (JPG ou PNG).'
-    if (file.size > MAX_BYTES) return 'A imagem é muito grande. Use uma foto de até 8 MB.'
+    if (file.size > MAX_BYTES) return 'A imagem é muito grande. Use uma foto de até 12 MB.'
     return ''
   }
 
@@ -126,7 +126,7 @@ export function AiMirror() {
     <section
       id="espelho"
       data-nav-theme="light"
-      className="py-section-gap px-safe-margin-mobile md:px-safe-margin bg-pearl-white relative scroll-mt-24"
+      className="py-20 sm:py-28 md:py-section-gap px-safe-margin-mobile md:px-safe-margin bg-pearl-white relative scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
         {/* Interactive panel */}

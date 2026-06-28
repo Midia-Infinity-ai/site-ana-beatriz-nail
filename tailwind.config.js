@@ -19,38 +19,40 @@ export default {
         'line-strong': '#89726F',
         'gold-soft': '#C9A86A',
 
-        // ---- Admin palette (dark panel, kept from the base) ----
-        'surface-container': '#201f1f',
-        'tertiary-container': '#e4e2e1',
-        'pure-black': '#000000',
-        'outline-variant': '#444748',
-        'inverse-surface': '#e5e2e1',
-        'inverse-on-surface': '#313030',
-        surface: '#131313',
-        'surface-container-high': '#2a2a2a',
-        primary: '#ffffff',
-        background: '#131313',
-        'primary-container': '#e2e2e2',
-        secondary: '#c8c6c5',
-        'on-background': '#e5e2e1',
-        'on-surface-variant': '#c4c7c8',
-        'surface-container-highest': '#353534',
-        'silver-gray': '#A1A1A1',
-        'secondary-container': '#474746',
-        'status-gold': '#C5A059',
-        'on-primary': '#2f3131',
-        outline: '#8e9192',
-        'surface-container-low': '#1c1b1b',
-        'surface-tint': '#c6c6c7',
-        'surface-container-lowest': '#0e0e0e',
-        'surface-dim': '#131313',
-        'on-surface': '#e5e2e1',
-        error: '#ffb4ab',
-        'on-error': '#690005',
-        'error-container': '#93000a',
-        tertiary: '#ffffff',
-        'surface-variant': '#353534',
-        'surface-bright': '#3a3939',
+        // ---- Admin panel palette (light, Ana Beatriz identity) ----
+        // The admin reuses these generic token names; remapped to the brand's
+        // warm/light editorial palette (pearl canvas, onyx ink, antique gold).
+        'surface-container': '#ffffff', // cards
+        'tertiary-container': '#efe9e3',
+        'pure-black': '#1A1A1A', // dark text (e.g. on gold buttons)
+        'outline-variant': '#e6ddd4', // hairline borders
+        'inverse-surface': '#1A1A1A',
+        'inverse-on-surface': '#F8F4F0',
+        surface: '#F8F4F0',
+        'surface-container-high': '#efe9e3',
+        primary: '#1A1A1A', // onyx: headings + dark buttons
+        background: '#F8F4F0',
+        'primary-container': '#4A0404',
+        secondary: '#6E635E',
+        'on-background': '#1A1A1A',
+        'on-surface-variant': '#5b5048',
+        'surface-container-highest': '#e7ded5',
+        'silver-gray': '#6E635E', // muted text on light
+        'secondary-container': '#efe9e3',
+        'status-gold': '#B58D3D', // antique gold accent
+        'on-primary': '#F8F4F0', // light text on dark buttons
+        outline: '#b7a99f',
+        'surface-container-low': '#f3eee9', // inputs / subtle fills
+        'surface-tint': '#B58D3D',
+        'surface-container-lowest': '#F8F4F0', // admin page background
+        'surface-dim': '#efe9e3',
+        'on-surface': '#1A1A1A',
+        error: '#B3261E',
+        'on-error': '#ffffff',
+        'error-container': '#f9dedc',
+        tertiary: '#4A0404',
+        'surface-variant': '#efe9e3',
+        'surface-bright': '#ffffff',
       },
       borderRadius: {
         // Sharp, architectural edges per the editorial system.

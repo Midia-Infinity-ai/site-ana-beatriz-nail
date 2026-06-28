@@ -227,7 +227,7 @@ export function AdminCovers() {
         <button
           onClick={save}
           disabled={saving}
-          className="bg-primary text-pure-black px-8 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors disabled:opacity-50"
+          className="bg-primary text-on-primary px-8 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors disabled:opacity-50"
         >
           {saving ? 'Salvando...' : 'Salvar Capas'}
         </button>

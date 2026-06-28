@@ -9,17 +9,12 @@ export function Criadora() {
     <section
       id="sobre"
       data-nav-theme="light"
-      className="py-section-gap px-safe-margin-mobile md:px-safe-margin bg-pearl-white relative scroll-mt-24"
+      className="py-20 sm:py-28 md:py-section-gap px-safe-margin-mobile md:px-safe-margin bg-pearl-white relative scroll-mt-24"
     >
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
         <div className="md:col-span-5 relative">
           <div className="aspect-[3/4] relative overflow-hidden">
-            <SectionImage
-              src={covers.criadora}
-              alt="Retrato de Ana Beatriz em seu atelier"
-              className="w-full h-full clip-image"
-              imgClassName="clip-image"
-            />
+            <SectionImage src={covers.criadora} alt="Retrato de Ana Beatriz em seu atelier" />
           </div>
           {/* Geometric ornament */}
           <div className="absolute -bottom-8 -right-8 w-64 h-64 border border-antique-gold/30 z-[-1] hidden md:block" />

@@ -9,7 +9,7 @@ export function Sensorial() {
     <section
       id="experiencia"
       data-nav-theme="dark"
-      className="py-section-gap px-safe-margin-mobile md:px-safe-margin bg-onyx-black text-pearl-white relative overflow-hidden scroll-mt-24"
+      className="py-20 sm:py-28 md:py-section-gap px-safe-margin-mobile md:px-safe-margin bg-onyx-black text-pearl-white relative overflow-hidden scroll-mt-24"
     >
       {/* Decorative oversized background word */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[30vw] font-headline-lg text-white/[0.02] whitespace-nowrap pointer-events-none select-none z-0">
@@ -53,8 +53,7 @@ export function Sensorial() {
             <SectionImage
               src={covers.sensorial}
               alt="Detalhe macro de um cuidado de luxo nas unhas"
-              className="w-full h-full clip-image grayscale hover:grayscale-0 transition-all duration-1000"
-              imgClassName="clip-image grayscale hover:grayscale-0 transition-all duration-1000"
+              imgClassName="grayscale hover:grayscale-0 transition-all duration-1000"
             />
           </div>
         </div>

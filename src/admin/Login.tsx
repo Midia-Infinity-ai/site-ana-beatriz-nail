@@ -69,7 +69,7 @@ export function AdminLogin() {
           <button
             type="submit"
             disabled={busy}
-            className="w-full btn-shine bg-primary text-pure-black font-label-sm text-label-sm uppercase tracking-widest py-4 hover:bg-status-gold transition-colors disabled:opacity-50"
+            className="w-full btn-shine bg-primary text-on-primary font-label-sm text-label-sm uppercase tracking-widest py-4 hover:bg-status-gold transition-colors disabled:opacity-50"
           >
             {busy ? 'Entrando...' : 'Entrar'}
           </button>

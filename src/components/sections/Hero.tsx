@@ -12,12 +12,16 @@ export function Hero() {
     >
       <div className="absolute inset-0 z-0 bg-onyx-black">
         {covers.hero ? (
-          <OptimizedImage
-            src={covers.hero}
-            alt="Atelier de Ana Beatriz em luz dourada"
-            priority
-            className="w-full h-full object-cover animate-ken-burns"
-          />
+          // 40% opacity lives on the wrapper so it isn't overridden by the
+          // image's fade-in animation (which ends at opacity:1).
+          <div className="w-full h-full opacity-40 animate-ken-burns">
+            <OptimizedImage
+              src={covers.hero}
+              alt="Atelier de Ana Beatriz em luz dourada"
+              priority
+              className="w-full h-full object-cover"
+            />
+          </div>
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-deep-burgundy via-onyx-black to-onyx-black" />
         )}

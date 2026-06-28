@@ -62,7 +62,7 @@ export function AdminMedia() {
         <button
           onClick={() => fileRef.current?.click()}
           disabled={busy}
-          className="btn-shine bg-primary text-pure-black px-5 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors inline-flex items-center gap-2 disabled:opacity-50"
+          className="btn-shine bg-primary text-on-primary px-5 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors inline-flex items-center gap-2 disabled:opacity-50"
         >
           <Icon name="upload" className="text-lg" /> {busy ? 'Enviando...' : 'Enviar Imagem'}
         </button>
