@@ -39,9 +39,9 @@ export function AdminLeads() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-10">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-          <h1 className="font-headline-md text-headline-md text-primary">Leads</h1>
+          <h1 className="font-headline-md text-headline-md text-primary">Reservas</h1>
           <p className="text-silver-gray font-body-md mt-1">
             {leads.length} solicitação{leads.length !== 1 ? 'ões' : ''} recebida{leads.length !== 1 ? 's' : ''}
           </p>
@@ -50,7 +50,7 @@ export function AdminLeads() {
           <a
             href={adminApi.exportLeads()}
             download
-            className="btn-shine bg-primary text-on-primary px-5 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors inline-flex items-center gap-2"
+            className="bg-primary text-on-primary px-5 py-3.5 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors inline-flex items-center justify-center gap-2 w-full sm:w-auto"
           >
             <Icon name="download" className="text-lg" /> Exportar CSV
           </a>

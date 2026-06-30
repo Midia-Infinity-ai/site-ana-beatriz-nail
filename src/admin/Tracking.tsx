@@ -106,11 +106,11 @@ export function AdminTracking() {
         ))}
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
         <button
           onClick={save}
           disabled={saving}
-          className="btn-shine bg-primary text-on-primary px-8 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors disabled:opacity-50"
+          className="btn-shine bg-primary text-on-primary px-8 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors disabled:opacity-50 w-full sm:w-auto text-center"
         >
           {saving ? 'Salvando...' : 'Salvar'}
         </button>

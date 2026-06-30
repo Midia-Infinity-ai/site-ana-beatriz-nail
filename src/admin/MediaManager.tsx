@@ -52,7 +52,7 @@ export function AdminMedia() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-10">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="font-headline-md text-headline-md text-primary">Mídia</h1>
           {items.length > 0 && (
@@ -62,7 +62,7 @@ export function AdminMedia() {
         <button
           onClick={() => fileRef.current?.click()}
           disabled={busy}
-          className="btn-shine bg-primary text-on-primary px-5 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors inline-flex items-center gap-2 disabled:opacity-50"
+          className="bg-primary text-on-primary px-5 py-3.5 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors inline-flex items-center justify-center gap-2 disabled:opacity-50 w-full sm:w-auto"
         >
           <Icon name="upload" className="text-lg" /> {busy ? 'Enviando...' : 'Enviar Imagem'}
         </button>

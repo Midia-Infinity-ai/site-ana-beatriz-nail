@@ -104,7 +104,7 @@ export function AdminPackages() {
 
   return (
     <div>
-      <div className="flex items-start justify-between mb-6 gap-4 flex-wrap">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-6 gap-4">
         <div>
           <h1 className="font-headline-md text-headline-md text-primary mb-2">Serviços</h1>
           <p className="text-silver-gray font-body-md max-w-2xl">
@@ -114,7 +114,7 @@ export function AdminPackages() {
         </div>
         <button
           onClick={add}
-          className="bg-surface-container border border-outline-variant/40 text-primary px-5 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:border-status-gold transition-colors inline-flex items-center gap-2 shrink-0"
+          className="bg-surface-container border border-outline-variant/40 text-primary px-5 py-3.5 font-label-sm text-label-sm uppercase tracking-widest hover:border-status-gold transition-colors inline-flex items-center justify-center gap-2 w-full sm:w-auto shrink-0"
         >
           <Icon name="add" className="text-lg" /> Novo Serviço
         </button>
@@ -265,11 +265,11 @@ export function AdminPackages() {
         </div>
       )}
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
         <button
           onClick={save}
           disabled={saving}
-          className="btn-shine bg-primary text-on-primary px-8 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors disabled:opacity-50"
+          className="btn-shine bg-primary text-on-primary px-8 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors disabled:opacity-50 w-full sm:w-auto text-center"
         >
           {saving ? 'Salvando...' : 'Salvar Serviços'}
         </button>

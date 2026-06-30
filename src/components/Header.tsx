@@ -18,6 +18,7 @@ export function Header() {
   const [open, setOpen] = useState(false)
   // Header text tone: 'light' = white text (over dark sections), 'dark' = black.
   const [tone, setTone] = useState<'light' | 'dark'>('light')
+  const [scrolled, setScrolled] = useState(false)
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
@@ -29,11 +30,13 @@ export function Header() {
     }
   }, [open])
 
-  // Pick black/white based on the section currently under the header band.
+  // Track scroll (for the glass bar) and pick black/white based on the section
+  // currently under the header band.
   useEffect(() => {
     let frame = 0
     const compute = () => {
       frame = 0
+      setScrolled(window.scrollY > 24)
       const sections = Array.from(
         document.querySelectorAll<HTMLElement>('[data-nav-theme]'),
       )
@@ -74,32 +77,55 @@ export function Header() {
     }
   }
 
-  // When the overlay is open the header sits over onyx -> always white.
-  const headerColor = open ? 'text-pearl-white' : tone === 'light' ? 'text-white' : 'text-onyx-black'
+  // Over the glass bar (scrolled) the text is always onyx; otherwise it follows
+  // the section tone; while the overlay is open it is pearl.
+  const headerColor = open
+    ? 'text-pearl-white'
+    : scrolled
+      ? 'text-onyx-black'
+      : tone === 'light'
+        ? 'text-white'
+        : 'text-onyx-black'
+
+  // The glass bar fades in on scroll, anchoring the brand + menu as a unit.
+  const barClasses =
+    !open && scrolled
+      ? 'bg-pearl-white/80 backdrop-blur-md border-onyx-black/[0.07] shadow-[0_8px_30px_-16px_rgba(26,26,26,0.35)]'
+      : 'bg-transparent border-transparent'
+
+  const padClasses = scrolled
+    ? 'pt-[calc(env(safe-area-inset-top)+0.7rem)] pb-3 md:py-3.5'
+    : 'pt-[calc(env(safe-area-inset-top)+1.25rem)] pb-5 md:py-6'
 
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-[60] flex justify-between items-center px-safe-margin-mobile md:px-safe-margin pt-[calc(env(safe-area-inset-top)+1.25rem)] pb-5 md:py-6 transition-colors duration-300 ${headerColor}`}
+        className={`fixed top-0 left-0 w-full z-[60] border-b transition-all duration-500 ${barClasses}`}
       >
-        <button
-          onClick={() => goTo('topo')}
-          className="font-headline-md text-2xl sm:text-headline-md tracking-tight"
-          aria-label="Ana Beatriz, ir ao topo"
+        <div
+          className={`flex justify-between items-center px-safe-margin-mobile md:px-safe-margin transition-all duration-500 ${padClasses} ${headerColor}`}
         >
-          Ana Beatriz
-        </button>
-        <button
-          className="font-label-caps uppercase tracking-[0.2em] text-[11px] group flex items-center gap-2"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-label={open ? 'Fechar menu' : 'Abrir menu'}
-        >
-          <span className="group-hover:opacity-60 transition-opacity">
-            {open ? 'Fechar' : 'Menu'}
-          </span>
-          <span className="w-8 h-px bg-current group-hover:w-12 transition-all duration-300" />
-        </button>
+          <button
+            onClick={() => goTo('topo')}
+            className={`font-headline-md tracking-tight transition-all duration-500 ${
+              scrolled ? 'text-xl sm:text-2xl' : 'text-2xl sm:text-headline-md'
+            }`}
+            aria-label="Ana Beatriz, ir ao topo"
+          >
+            Ana Beatriz
+          </button>
+          <button
+            className="font-label-caps uppercase tracking-[0.25em] text-[11px] group flex items-center gap-2.5 py-2 -my-2"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-label={open ? 'Fechar menu' : 'Abrir menu'}
+          >
+            <span className="group-hover:opacity-60 transition-opacity">
+              {open ? 'Fechar' : 'Menu'}
+            </span>
+            <span className="w-7 h-px bg-current group-hover:w-10 transition-all duration-300" />
+          </button>
+        </div>
       </header>
 
       {/* Full-screen overlay navigation */}

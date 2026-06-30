@@ -223,11 +223,11 @@ export function AdminCovers() {
         ))}
       </div>
 
-      <div className="flex items-center gap-4 flex-wrap">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-wrap">
         <button
           onClick={save}
           disabled={saving}
-          className="bg-primary text-on-primary px-8 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors disabled:opacity-50"
+          className="bg-primary text-on-primary px-8 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-status-gold transition-colors disabled:opacity-50 w-full sm:w-auto text-center"
         >
           {saving ? 'Salvando...' : 'Salvar Capas'}
         </button>
