@@ -9,7 +9,6 @@ import { authRoutes } from './routes/auth.js'
 import { siteContentRoutes } from './routes/siteContent.js'
 import { uploadRoutes } from './routes/uploads.js'
 import { nailRoutes } from './routes/nail.js'
-import { leadRoutes } from './routes/leads.js'
 import { visitRoutes } from './routes/visits.js'
 
 const PORT = Number(process.env.PORT ?? 3000)
@@ -49,7 +48,6 @@ async function main() {
       await api.register(siteContentRoutes)
       await api.register(uploadRoutes)
       await api.register(nailRoutes)
-      await api.register(leadRoutes)
       await api.register(visitRoutes)
     },
     { prefix: '/api' },

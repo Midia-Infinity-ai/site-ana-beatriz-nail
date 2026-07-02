@@ -9,7 +9,6 @@ type NavEntry = { to: string; end?: boolean; icon: string; label: string }
 // Full list (desktop sidebar + mobile "Mais" sheet).
 const NAV: NavEntry[] = [
   { to: '/admin', end: true, icon: 'dashboard', label: 'Painel' },
-  { to: '/admin/leads', end: true, icon: 'contact_mail', label: 'Reservas' },
   { to: '/admin/covers', end: true, icon: 'wallpaper', label: 'Capas' },
   { to: '/admin/packages', end: true, icon: 'spa', label: 'Serviços' },
   { to: '/admin/site-content', end: true, icon: 'tune', label: 'Conteúdo' },

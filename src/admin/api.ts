@@ -57,11 +57,6 @@ export const adminApi = {
     })
   },
 
-  listLeads: () => request<Lead[]>('/leads'),
-  deleteLead: (id: number) =>
-    request<{ ok: boolean }>(`/leads/${id}`, { method: 'DELETE' }),
-  exportLeads: () => `/api/leads/export`,
-
   visitStats: (days: number) => request<VisitStats>(`/visits/stats?days=${days}`),
 }
 
@@ -71,14 +66,4 @@ export type VisitStats = {
   uniqueVisitors: number
   series: { day: string; visits: number; visitors: number }[]
   topPaths: { path: string; visits: number }[]
-}
-
-export type Lead = {
-  id: number
-  name: string
-  email: string
-  phone: string
-  service: string
-  details: string
-  created_at: string
 }

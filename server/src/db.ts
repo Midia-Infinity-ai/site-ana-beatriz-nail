@@ -29,16 +29,6 @@ db.exec(`
     updated_at TEXT NOT NULL
   );
 
-  CREATE TABLE IF NOT EXISTS leads (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL DEFAULT '',
-    email TEXT NOT NULL DEFAULT '',
-    phone TEXT NOT NULL DEFAULT '',
-    service TEXT NOT NULL DEFAULT '',
-    details TEXT NOT NULL DEFAULT '',
-    created_at TEXT NOT NULL
-  );
-
   CREATE TABLE IF NOT EXISTS visits (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     path TEXT NOT NULL DEFAULT '',

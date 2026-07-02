@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { adminApi, type Lead, type VisitStats } from './api'
+import { adminApi, type VisitStats } from './api'
 import { Icon } from '../components/Icon'
 
 const PERIODS = [
@@ -138,33 +138,15 @@ function VisitorAnalytics() {
 }
 
 export function AdminDashboard() {
-  const [leads, setLeads] = useState<Lead[]>([])
-
-  useEffect(() => {
-    adminApi.listLeads().then(setLeads).catch(() => undefined)
-  }, [])
-
   return (
     <div>
       <h1 className="font-headline-md text-headline-md text-primary mb-2">Painel</h1>
       <p className="text-silver-gray font-body-md mb-10">
-        Acompanhe o tráfego do site e gerencie as reservas, os textos e as imagens.
+        Acompanhe o tráfego do site e gerencie os textos e as imagens. Os agendamentos ficam a
+        cargo do Cal.com, na seção de contato do site.
       </p>
 
       <VisitorAnalytics />
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-        <Link
-          to="/admin/leads"
-          className="bg-surface-container border border-outline-variant/30 p-6 hover:border-status-gold transition-colors group"
-        >
-          <Icon name="contact_mail" className="text-status-gold text-3xl mb-4" />
-          <div className="text-4xl font-bold text-primary mb-1">{leads.length}</div>
-          <div className="text-silver-gray font-label-sm text-label-sm uppercase">
-            Reservas recebidas
-          </div>
-        </Link>
-      </div>
 
       <div className="flex flex-wrap gap-4">
         <Link

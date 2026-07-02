@@ -88,11 +88,18 @@ export async function generateNailTryOn(
 
   const instruction = referenceDataUrl
     ? `You are given TWO images. The FIRST image is a photograph of a person's hand. ` +
-      `The SECOND image is a reference showing a desired nail design. ` +
-      `Edit the FIRST image: repaint ONLY the fingernails so they faithfully reproduce the ` +
-      `colors, pattern, art and finish of the nail design shown in the SECOND (reference) image, ` +
-      `adapting it naturally to the shape and size of this person's nails. As a secondary hint, ` +
-      `the overall vibe is ${styleBrief}. ${baseRules}`
+      `The SECOND image is a reference nail design that is the SINGLE SOURCE OF TRUTH for the look: ` +
+      `treat it as a precise specification to replicate, not inspiration to loosely riff on. ` +
+      `Edit the FIRST image: repaint the fingernails to match the SECOND image AS CLOSELY AS PHYSICALLY ` +
+      `POSSIBLE, reproducing exactly: the same colors and any gradients or color transitions, the same ` +
+      `pattern/motif and where it sits on the nail, the same finish (glossy, matte, chrome, glitter...), ` +
+      `the same embellishments (rhinestones, foil, 3D charms, French line, ombre, etc.) in the same ` +
+      `positions, and the same overall proportions of the nail art relative to the nail (e.g. how much of ` +
+      `the tip is covered, line thickness, spacing between elements). Do not simplify, reinterpret, ` +
+      `average it with a generic style, or invent your own variation: the goal is a faithful, near-identical ` +
+      `copy of the reference design applied to this specific hand. The ONLY things you may adapt are the ` +
+      `design's scale and placement, so it fits this person's actual nail shape, size, curvature and finger ` +
+      `count naturally. ${baseRules}`
     : `Edit the provided photograph of a person's hand. Repaint ONLY the fingernails with ` +
       `${styleBrief}. ${baseRules}`
 

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Reveal } from '../Reveal'
 import { Icon } from '../Icon'
 import { whatsappHref } from '../../lib/contact'
@@ -36,7 +36,9 @@ export function AiMirror() {
   const [style, setStyle] = useState<string>(STYLES[0].id)
   const [status, setStatus] = useState<Status>('idle')
   const [result, setResult] = useState<string>('')
+  const [usedReference, setUsedReference] = useState(false)
   const [error, setError] = useState<string>('')
+  const [lightboxOpen, setLightboxOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const refInputRef = useRef<HTMLInputElement>(null)
 
@@ -94,6 +96,7 @@ export function AiMirror() {
       const data = (await res.json()) as { image?: string }
       if (!data.image) throw new Error('sem_imagem')
       setResult(data.image)
+      setUsedReference(!!reference)
       setStatus('done')
     } catch (err) {
       const code = err instanceof Error ? err.message : 'falha'
@@ -114,6 +117,7 @@ export function AiMirror() {
     setPhoto('')
     setReference('')
     setResult('')
+    setUsedReference(false)
     setStatus('idle')
     setError('')
     if (inputRef.current) inputRef.current.value = ''
@@ -121,6 +125,20 @@ export function AiMirror() {
   }
 
   const styleLabel = STYLES.find((s) => s.id === style)?.label ?? ''
+  const resultBadge = usedReference ? 'Baseado na sua referência' : styleLabel
+  const downloadName = `ana-beatriz-previa-${usedReference ? 'referencia' : style}.png`
+
+  // Close the lightbox with Escape and lock body scroll while it's open.
+  useEffect(() => {
+    if (!lightboxOpen) return
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setLightboxOpen(false)
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [lightboxOpen])
 
   return (
     <section
@@ -135,16 +153,26 @@ export function AiMirror() {
             {/* Upload / preview / result */}
             {status === 'done' && result ? (
               <div className="relative">
-                <div className="aspect-square relative overflow-hidden mask-soft-lg ring-soft layer-depth-1 bg-onyx-black">
+                <button
+                  type="button"
+                  onClick={() => setLightboxOpen(true)}
+                  className="group w-full aspect-square relative overflow-hidden mask-soft-lg ring-soft layer-depth-1 bg-onyx-black"
+                  aria-label="Ver prévia em tela cheia"
+                >
                   <img
                     src={result}
-                    alt={`Prévia das suas unhas no estilo ${styleLabel}`}
+                    alt={`Prévia das suas unhas, ${resultBadge}`}
                     className="w-full h-full object-cover"
                   />
                   <span className="absolute top-4 left-4 bg-antique-gold text-onyx-black font-label-caps text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
-                    {styleLabel}
+                    {resultBadge}
                   </span>
-                </div>
+                  <div className="absolute inset-0 bg-onyx-black/0 group-hover:bg-onyx-black/30 transition-colors flex items-center justify-center">
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity inline-flex items-center gap-2 bg-pearl-white/90 text-onyx-black font-label-caps text-[10px] uppercase tracking-[0.2em] px-4 py-2 rounded-full">
+                      <Icon name="fullscreen" className="text-base" /> Ver em tela cheia
+                    </span>
+                  </div>
+                </button>
                 <div className="flex flex-col sm:flex-row gap-3 mt-5">
                   <a
                     href={whatsappHref(
@@ -155,6 +183,13 @@ export function AiMirror() {
                     className="inline-flex items-center justify-center gap-2 bg-deep-burgundy text-pearl-white px-6 py-4 sm:py-3 font-label-caps text-[11px] uppercase tracking-[0.2em] hover:bg-onyx-black transition-colors w-full sm:w-auto"
                   >
                     <Icon name="event_available" className="text-base" /> Agendar este modelo
+                  </a>
+                  <a
+                    href={result}
+                    download={downloadName}
+                    className="inline-flex items-center justify-center gap-2 border border-onyx-black/30 text-onyx-black px-6 py-4 sm:py-3 font-label-caps text-[11px] uppercase tracking-[0.2em] hover:border-onyx-black transition-colors w-full sm:w-auto"
+                  >
+                    <Icon name="download" className="text-base" /> Baixar imagem
                   </a>
                   <button
                     onClick={reset}
@@ -332,6 +367,46 @@ export function AiMirror() {
           </Reveal>
         </div>
       </div>
+
+      {/* Full-screen lightbox for the generated preview */}
+      {lightboxOpen && result && (
+        <div
+          className="fixed inset-0 z-[100] bg-onyx-black/95 flex flex-col items-center justify-center p-4 sm:p-8"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Prévia em tela cheia"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <button
+            onClick={() => setLightboxOpen(false)}
+            aria-label="Fechar"
+            className="absolute top-4 right-4 sm:top-8 sm:right-8 text-pearl-white/80 hover:text-pearl-white transition-colors p-2"
+          >
+            <Icon name="close" className="text-3xl" />
+          </button>
+          <img
+            src={result}
+            alt={`Prévia das suas unhas, ${resultBadge}`}
+            className="max-w-full max-h-[75vh] sm:max-h-[80vh] object-contain mask-soft-lg"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <div
+            className="mt-6 flex flex-col sm:flex-row items-center gap-3"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span className="font-label-caps text-[11px] uppercase tracking-[0.2em] text-antique-gold">
+              {resultBadge}
+            </span>
+            <a
+              href={result}
+              download={downloadName}
+              className="inline-flex items-center justify-center gap-2 bg-antique-gold text-onyx-black px-6 py-3 font-label-caps text-[11px] uppercase tracking-[0.2em] hover:bg-pearl-white transition-colors rounded-full"
+            >
+              <Icon name="download" className="text-base" /> Baixar imagem
+            </a>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
