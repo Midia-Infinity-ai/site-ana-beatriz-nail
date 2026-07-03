@@ -16,7 +16,6 @@ const DEFAULT_SITE_CONTENT: Record<string, unknown> = {
     sensorial: '',
     beforeBefore: '',
     beforeAfter: '',
-    contact: '',
   },
   tracking: {
     metaPixelId: '',

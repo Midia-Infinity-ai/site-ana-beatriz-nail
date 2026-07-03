@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { adminApi } from './api'
 import { Icon } from '../components/Icon'
 
-type CoverKey = 'hero' | 'criadora' | 'sensorial' | 'beforeBefore' | 'beforeAfter' | 'contact'
+type CoverKey = 'hero' | 'criadora' | 'sensorial' | 'beforeBefore' | 'beforeAfter'
 
 type CoversConfig = Record<CoverKey, string>
 
@@ -12,7 +12,6 @@ const DEFAULT_COVERS: CoversConfig = {
   sensorial: '',
   beforeBefore: '',
   beforeAfter: '',
-  contact: '',
 }
 
 const COVER_META: { key: CoverKey; label: string; page: string; spec: string }[] = [
@@ -46,12 +45,6 @@ const COVER_META: { key: CoverKey; label: string; page: string; spec: string }[]
     page: 'Comparador "Desperte sua Beleza" (lado direito: nail art)',
     spec: '1280×720px mínimo • WebP ou JPG • 16:9 • máx. 500 KB',
   },
-  {
-    key: 'contact',
-    label: 'Contato — Imagem',
-    page: 'Seção final de agendamento (quadrada)',
-    spec: '1000×1000px mínimo • WebP ou JPG • 1:1 • máx. 500 KB',
-  },
 ]
 
 export function AdminCovers() {
@@ -69,7 +62,6 @@ export function AdminCovers() {
     sensorial: null,
     beforeBefore: null,
     beforeAfter: null,
-    contact: null,
   })
 
   useEffect(() => {

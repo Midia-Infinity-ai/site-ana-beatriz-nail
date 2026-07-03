@@ -5,19 +5,22 @@ import { rateLimit } from '../rateLimit.js'
 
 type VisitInput = { path?: string; visitor?: string }
 
+// The site's only real routes. Anything else (typically automated bots/
+// scanners probing for generic admin/exploit paths) is silently dropped here
+// so it never pollutes the "top pages" metrics, no matter how it was posted.
+const KNOWN_PATHS = new Set(['/', '/politica-de-privacidade'])
+
 export async function visitRoutes(app: FastifyInstance) {
   /** Public: record a page view (rate limited per IP to prevent flooding). */
   app.post('/visits', { preHandler: rateLimit({ windowMs: 60_000, max: 100 }) }, async (request, reply) => {
     const input = (request.body ?? {}) as VisitInput
+    const path = (input.path ?? '/').slice(0, 300)
+    if (!KNOWN_PATHS.has(path)) return reply.code(204).send()
+
     const now = new Date().toISOString()
     db.prepare(
       'INSERT INTO visits (path, visitor, day, created_at) VALUES (?, ?, ?, ?)',
-    ).run(
-      (input.path ?? '/').slice(0, 300),
-      (input.visitor ?? '').slice(0, 80),
-      now.slice(0, 10),
-      now,
-    )
+    ).run(path, (input.visitor ?? '').slice(0, 80), now.slice(0, 10), now)
     return reply.code(204).send()
   })
 

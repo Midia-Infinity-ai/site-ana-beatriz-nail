@@ -5,7 +5,6 @@ export type CoversConfig = {
   sensorial: string
   beforeBefore: string
   beforeAfter: string
-  contact: string
 }
 
 export type TrackingConfig = {
@@ -51,7 +50,6 @@ const SITE_CONTENT: SiteContent = {
     sensorial: '',
     beforeBefore: '',
     beforeAfter: '',
-    contact: '',
   },
   tracking: {
     metaPixelId: '',

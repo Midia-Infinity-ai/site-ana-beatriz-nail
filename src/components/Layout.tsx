@@ -6,6 +6,9 @@ import { TrackingScripts } from './TrackingScripts'
 import { CookieConsent } from './CookieConsent'
 
 const VISITOR_KEY = 'aba_visitor'
+// The site's only real routes; anything else is a 404 (often a bot/scanner
+// probe) and shouldn't be counted in the metrics dashboard.
+const KNOWN_PATHS = new Set(['/', '/politica-de-privacidade'])
 
 /** On navigation: jump to the top (anchors are handled by the Header). */
 function useScrollToTop() {
@@ -20,6 +23,7 @@ function useScrollToTop() {
 function useVisitTracking() {
   const { pathname } = useLocation()
   useEffect(() => {
+    if (!KNOWN_PATHS.has(pathname)) return
     let visitor = ''
     try {
       visitor = localStorage.getItem(VISITOR_KEY) ?? ''

@@ -59,12 +59,14 @@ export async function nailRoutes(app: FastifyInstance) {
       if (base64Bytes(image) > MAX_IMAGE_BYTES) {
         return reply.code(413).send({ error: 'image_too_large' })
       }
-      if (!style || !STYLE_IDS.includes(style)) {
-        return reply.code(400).send({ error: 'invalid_style' })
-      }
       const hasReference = typeof reference === 'string' && reference.startsWith('data:image/')
       if (hasReference && base64Bytes(reference!) > MAX_IMAGE_BYTES) {
         return reply.code(413).send({ error: 'reference_too_large' })
+      }
+      // A style is only required when there's no reference: with one, the
+      // reference alone defines the look and the style pill is hidden client-side.
+      if (!hasReference && (!style || !STYLE_IDS.includes(style))) {
+        return reply.code(400).send({ error: 'invalid_style' })
       }
 
       try {

@@ -46,6 +46,16 @@ export function PrivacyPolicy() {
           imagem é processada para essa finalidade e a prévia é exibida apenas para você.
           Não publicamos a sua foto, não a usamos para identificar você e não a
           compartilhamos para fins de marketing.
+          <br />
+          <br />
+          <strong>As imagens geradas são meramente ilustrativas e demonstrativas</strong>,
+          criadas por inteligência artificial a partir da sua foto e (quando enviada) de uma
+          imagem de referência. Elas servem para inspiração e para ajudar você a visualizar
+          possibilidades, mas não constituem promessa, garantia ou compromisso de resultado.
+          O resultado final do serviço realizado presencialmente pode variar em relação à
+          prévia gerada, a depender de fatores como o formato natural das unhas, a técnica
+          aplicada e as possibilidades de cada material. A profissional não garante que o
+          resultado do atendimento será idêntico à imagem gerada pela ferramenta.
         </>
       ),
     },

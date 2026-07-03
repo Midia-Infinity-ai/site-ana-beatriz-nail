@@ -1,9 +1,13 @@
 /**
  * OpenRouter client for the "Espelho do Futuro" virtual nail try-on.
  *
- * The visitor uploads a photo of their hand; a vision+image model (Gemini 2.5
- * Flash Image, "nano banana") repaints ONLY the nails in the chosen style while
- * keeping the real hand, skin, pose and lighting untouched and photorealistic.
+ * The visitor uploads a photo of their hand and either picks a style or
+ * attaches a reference nail-design photo. A vision+image model (Gemini 2.5
+ * Flash Image, "nano banana") simulates the finished manicure on that hand:
+ * with a style, it repaints the existing nails; with a reference, it also
+ * matches the reference's nail shape and length (extending short nails when
+ * the reference shows extensions). The hand itself (skin, pose, background,
+ * lighting) stays untouched and photorealistic.
  *
  * The API key lives only on the server and is never exposed to the browser.
  */
@@ -71,37 +75,56 @@ type ContentPart =
  */
 export async function generateNailTryOn(
   imageDataUrl: string,
-  style: string,
+  style: string | undefined,
   referenceDataUrl?: string,
 ): Promise<string> {
-  const styleBrief = STYLE_PROMPTS[style]
-  if (!styleBrief) throw new Error('invalid_style')
+  // The style brief is only needed when there's no reference image: with a
+  // reference, it alone defines the desired look (see the instruction below).
+  let styleBrief = ''
+  if (!referenceDataUrl) {
+    const brief = STYLE_PROMPTS[style ?? '']
+    if (!brief) throw new Error('invalid_style')
+    styleBrief = brief
+  }
 
   const baseRules =
-    `Keep EVERYTHING else exactly as in the FIRST photo: the same hand, the same skin tone ` +
-    `and texture, the same finger pose and proportions, the same background, the same lighting ` +
-    `and shadows. Do not change the number of fingers or the hand shape. ` +
+    `Keep the hand itself exactly as in the FIRST photo: the same skin tone and texture, the ` +
+    `same finger pose and count, the same background, the same lighting and shadows. ` +
     `The result must look like a 100% real photograph of THIS hand with a fresh manicure, ` +
     `not an illustration, 3D render or AI artwork. Photorealistic, natural shine on the nails, ` +
     `physically correct reflections and shadows. No text, no watermark, no logo. ` +
     `Return a single edited image preserving the original framing and aspect ratio.`
 
   const instruction = referenceDataUrl
-    ? `You are given TWO images. The FIRST image is a photograph of a person's hand. ` +
-      `The SECOND image is a reference nail design that is the SINGLE SOURCE OF TRUTH for the look: ` +
-      `treat it as a precise specification to replicate, not inspiration to loosely riff on. ` +
-      `Edit the FIRST image: repaint the fingernails to match the SECOND image AS CLOSELY AS PHYSICALLY ` +
-      `POSSIBLE, reproducing exactly: the same colors and any gradients or color transitions, the same ` +
-      `pattern/motif and where it sits on the nail, the same finish (glossy, matte, chrome, glitter...), ` +
-      `the same embellishments (rhinestones, foil, 3D charms, French line, ombre, etc.) in the same ` +
-      `positions, and the same overall proportions of the nail art relative to the nail (e.g. how much of ` +
-      `the tip is covered, line thickness, spacing between elements). Do not simplify, reinterpret, ` +
-      `average it with a generic style, or invent your own variation: the goal is a faithful, near-identical ` +
-      `copy of the reference design applied to this specific hand. The ONLY things you may adapt are the ` +
-      `design's scale and placement, so it fits this person's actual nail shape, size, curvature and finger ` +
-      `count naturally. ${baseRules}`
+    ? `You are given TWO images. The FIRST image is a photograph of a person's hand with her CURRENT ` +
+      `nails (whatever their present length and shape). The SECOND image is a reference nail design ` +
+      `that is the SINGLE SOURCE OF TRUTH for the desired result: treat it as a precise specification ` +
+      `to replicate, not inspiration to loosely riff on. ` +
+      `Simulate the finished manicure/nail service AS IF it had actually been performed on this ` +
+      `person's hand, matching the SECOND image AS CLOSELY AS PHYSICALLY POSSIBLE in every visual ` +
+      `aspect, including: ` +
+      `(1) NAIL SHAPE - e.g. round, square, almond, coffin/ballerina, stiletto - copy the reference's ` +
+      `shape exactly, even if it differs from the hand photo's current shape; ` +
+      `(2) NAIL LENGTH - if the reference shows extended/long nails (acrylic or gel extensions) and the ` +
+      `FIRST photo shows short/natural nails, you MUST extend the nails in the output to match the ` +
+      `reference's length, as if an extension service was just done; do not keep them short. Likewise, ` +
+      `if the reference shows short/natural nails, keep them short. The output nail length and shape ` +
+      `must visually match the reference, NOT the original photo; ` +
+      `(3) COLOR - exact colors and any gradients or color transitions; ` +
+      `(4) PATTERN/MOTIF - the same design and exactly where it sits on the nail; ` +
+      `(5) FINISH - the same glossy, matte, chrome or glitter finish; ` +
+      `(6) EMBELLISHMENTS - the same rhinestones, foil, 3D charms, French line, ombre, etc. in the same ` +
+      `positions; ` +
+      `(7) PROPORTIONS - the same proportions of the nail art relative to the nail (how much of the tip ` +
+      `is covered, line thickness, spacing between elements). ` +
+      `Do not simplify, reinterpret, average it with a generic style, or invent your own variation: the ` +
+      `goal is a faithful, near-identical copy of the reference design and shape/length, applied ` +
+      `naturally to this specific hand (same finger count, same finger proportions and curvature, just ` +
+      `with the new nail shape/length/art from the reference). Render the extended or reshaped nails ` +
+      `with physically correct anatomy: natural-looking cuticles and nail beds, correct attachment to ` +
+      `the finger, no floating or detached nails. ${baseRules}`
     : `Edit the provided photograph of a person's hand. Repaint ONLY the fingernails with ` +
-      `${styleBrief}. ${baseRules}`
+      `${styleBrief}. Keep the nail shape and length as they are in the photo. ${baseRules}`
 
   const parts: ContentPart[] = [
     { type: 'text', text: instruction },

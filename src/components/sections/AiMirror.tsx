@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Reveal } from '../Reveal'
 import { Icon } from '../Icon'
-import { whatsappHref } from '../../lib/contact'
 import { compressImageToDataUrl } from '../../lib/image'
 
 /** Style options (ids are mapped to art-direction prompts on the server). */
@@ -84,7 +83,9 @@ export function AiMirror() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           image: photo,
-          style,
+          // With a reference, it alone defines the look; the style pill is
+          // hidden and ignored server-side, so don't bother sending it.
+          style: reference ? undefined : style,
           reference: reference || undefined,
           visitor: getVisitorId(),
         }),
@@ -127,6 +128,12 @@ export function AiMirror() {
   const styleLabel = STYLES.find((s) => s.id === style)?.label ?? ''
   const resultBadge = usedReference ? 'Baseado na sua referência' : styleLabel
   const downloadName = `ana-beatriz-previa-${usedReference ? 'referencia' : style}.png`
+
+  /** Smooth-scroll to the Cal.com booking section further down the page. */
+  const goToBooking = () => {
+    setLightboxOpen(false)
+    document.getElementById('agendar')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   // Close the lightbox with Escape and lock body scroll while it's open.
   useEffect(() => {
@@ -173,17 +180,20 @@ export function AiMirror() {
                     </span>
                   </div>
                 </button>
-                <div className="flex flex-col sm:flex-row gap-3 mt-5">
-                  <a
-                    href={whatsappHref(
-                      `Olá, Ana Beatriz! Provei o estilo "${styleLabel}" no Espelho do Futuro e amei. Gostaria de agendar um horário.`,
-                    )}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 bg-deep-burgundy text-pearl-white px-6 py-4 sm:py-3 font-label-caps text-[11px] uppercase tracking-[0.2em] hover:bg-onyx-black transition-colors w-full sm:w-auto"
+                {/* Primary conversion moment: invite her straight to the booking calendar. */}
+                <div className="mt-5 bg-deep-burgundy text-pearl-white px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+                  <p className="font-headline-md text-lg leading-snug">
+                    Amou o resultado?
+                    <br className="hidden sm:block" /> Vamos deixá-lo realidade.
+                  </p>
+                  <button
+                    onClick={goToBooking}
+                    className="inline-flex items-center justify-center gap-2 bg-antique-gold text-onyx-black px-6 py-3.5 font-label-caps text-[11px] uppercase tracking-[0.2em] hover:bg-pearl-white transition-colors w-full sm:w-auto shrink-0"
                   >
-                    <Icon name="event_available" className="text-base" /> Agendar este modelo
-                  </a>
+                    <Icon name="event_available" className="text-base" /> Reservar meu horário
+                  </button>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3 mt-3">
                   <a
                     href={result}
                     download={downloadName}
@@ -198,6 +208,10 @@ export function AiMirror() {
                     <Icon name="restart_alt" className="text-base" /> Tentar outro
                   </button>
                 </div>
+                <p className="text-xs text-ink-soft/60 mt-3">
+                  Prévia ilustrativa gerada por IA; o resultado do atendimento presencial pode
+                  variar.
+                </p>
               </div>
             ) : (
               <div
@@ -254,27 +268,29 @@ export function AiMirror() {
 
             {status !== 'done' && (
               <>
-                {/* Style chooser */}
-                <div className="flex flex-col gap-4">
-                  <span className="font-label-caps text-[10px] text-antique-gold uppercase tracking-[0.2em]">
-                    Escolha seu Estilo
-                  </span>
-                  <div className="flex flex-wrap gap-3">
-                    {STYLES.map((s) => (
-                      <button
-                        key={s.id}
-                        onClick={() => setStyle(s.id)}
-                        className={`px-5 py-2.5 rounded-full border font-label-caps text-[10px] uppercase tracking-[0.2em] transition-all ${
-                          style === s.id
-                            ? 'bg-antique-gold text-onyx-black border-antique-gold'
-                            : 'border-antique-gold/30 text-onyx-black hover:bg-antique-gold hover:text-onyx-black'
-                        }`}
-                      >
-                        {s.label}
-                      </button>
-                    ))}
+                {/* Style chooser: irrelevant once a reference defines the exact look */}
+                {!reference && (
+                  <div className="flex flex-col gap-4">
+                    <span className="font-label-caps text-[10px] text-antique-gold uppercase tracking-[0.2em]">
+                      Escolha seu Estilo
+                    </span>
+                    <div className="flex flex-wrap gap-3">
+                      {STYLES.map((s) => (
+                        <button
+                          key={s.id}
+                          onClick={() => setStyle(s.id)}
+                          className={`px-5 py-2.5 rounded-full border font-label-caps text-[10px] uppercase tracking-[0.2em] transition-all ${
+                            style === s.id
+                              ? 'bg-antique-gold text-onyx-black border-antique-gold'
+                              : 'border-antique-gold/30 text-onyx-black hover:bg-antique-gold hover:text-onyx-black'
+                          }`}
+                        >
+                          {s.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Optional reference image */}
                 <div className="flex flex-col gap-3">
@@ -397,10 +413,16 @@ export function AiMirror() {
             <span className="font-label-caps text-[11px] uppercase tracking-[0.2em] text-antique-gold">
               {resultBadge}
             </span>
+            <button
+              onClick={goToBooking}
+              className="inline-flex items-center justify-center gap-2 bg-antique-gold text-onyx-black px-6 py-3 font-label-caps text-[11px] uppercase tracking-[0.2em] hover:bg-pearl-white transition-colors rounded-full"
+            >
+              <Icon name="event_available" className="text-base" /> Reservar meu horário
+            </button>
             <a
               href={result}
               download={downloadName}
-              className="inline-flex items-center justify-center gap-2 bg-antique-gold text-onyx-black px-6 py-3 font-label-caps text-[11px] uppercase tracking-[0.2em] hover:bg-pearl-white transition-colors rounded-full"
+              className="inline-flex items-center justify-center gap-2 border border-pearl-white/40 text-pearl-white px-6 py-3 font-label-caps text-[11px] uppercase tracking-[0.2em] hover:border-pearl-white transition-colors rounded-full"
             >
               <Icon name="download" className="text-base" /> Baixar imagem
             </a>
